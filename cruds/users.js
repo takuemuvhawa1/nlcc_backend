@@ -6,7 +6,7 @@ let crudsObj = {};
 
 crudsObj.postUser = (name, surname, email, password, role, phone, address) => {
     return new Promise((resolve, reject) => {
-        pool.query('INSERT INTO users (name, surname, email, password, role, phone, address) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+        pool.query('INSERT INTO users (user_name, surname, email, user_password, role, phone, address) VALUES (?, ?, ?, ?, ?, ?, ?)', 
             [name, surname, email, password, role, phone, address], (err, result) => {
                 if (err) {
                     return reject(err);
@@ -15,6 +15,26 @@ crudsObj.postUser = (name, surname, email, password, role, phone, address) => {
             });
     });
 };
+
+crudsObj.authenticateUser = async (email, password) => {
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT * FROM users WHERE email = ? AND user_password = ?', [email, password], async (err, results) => {
+            if (err) {
+                return reject(err);
+            }
+            if (results.length === 0) {
+                return resolve({ status: '401', message: 'Invalid email or password' });
+            }
+            const user = results[0]; // Get the user data from the results
+
+            // Return user data without the password
+            const { user_password, ...userData } = user; // Exclude password from user data
+            return resolve({ status: '200', message: 'Login successful', user: userData });
+
+        });
+    });
+};
+
 
 crudsObj.getUsers = () => {
     return new Promise((resolve, reject) => {
@@ -40,7 +60,7 @@ crudsObj.getUserById = (userId) => {
 
 crudsObj.updateUser = (id, name, surname, email, password, role, phone, address) => {
     return new Promise((resolve, reject) => {
-        pool.query('UPDATE users SET name = ?, surname = ?, email = ?, password = ?, role = ?, phone = ?, address = ? WHERE user_id = ?',
+        pool.query('UPDATE users SET user_name = ?, surname = ?, email = ?, user_password = ?, role = ?, phone = ?, address = ? WHERE user_id = ?',
             [name, surname, email, password, role, phone, address, id], (err, result) => {
                 if (err) {
                     return reject(err);

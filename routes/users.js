@@ -14,6 +14,17 @@ userRouter.post('/', async (req, res) => {
     }
 });
 
+userRouter.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        let result = await usersDbOperations.authenticateUser(email, password);
+        res.status(result.status).json(result);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
 // Get All Users
 userRouter.get('/', async (req, res) => {
     try {

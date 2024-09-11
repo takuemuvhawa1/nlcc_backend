@@ -5,7 +5,7 @@ const membersDbOperations = require('../cruds/member');
 memberRouter.post('/', async (req, res) => {
     try {
         const postedValues = req.body;
-        const results = await membersDbOperations.postMember(postedValues.Name, postedValues.Surname, postedValues.Email, postedValues.Phone, postedValues.Address, postedValues.City, postedValues.Country, postedValues.MembershipStatus, postedValues.ProfilePicture);
+        const results = await membersDbOperations.postMember(postedValues.Name, postedValues.Surname, postedValues.Email, postedValues.Phone, postedValues.Address, postedValues.City, postedValues.Country, postedValues.MembershipStatus, postedValues.ProfilePicture, postedValues.Gender, postedValues.Suburb, postedValues.Zone);
         res.json(results);
     } catch (e) {
         console.log(e);
@@ -38,7 +38,7 @@ memberRouter.put('/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const updatedValues = req.body;
-        const result = await membersDbOperations.updateMember(id, updatedValues.Name, updatedValues.Surname, updatedValues.Email, updatedValues.Phone, updatedValues.Address, updatedValues.City, updatedValues.Country, updatedValues.MembershipStatus, updatedValues.ProfilePicture);
+        const result = await membersDbOperations.updateMember(id, updatedValues.Name, updatedValues.Surname, updatedValues.Email, updatedValues.Phone, updatedValues.Address, updatedValues.City, updatedValues.Country, updatedValues.MembershipStatus, updatedValues.ProfilePicture, updatedValues.Gender, updatedValues.Suburb, updatedValues.Zone);
         res.json(result);
     } catch (e) {
         console.log(e);

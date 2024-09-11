@@ -3,10 +3,10 @@ const pool = require('./poolfile');
 
 let crudsObj = {};
 
-crudsObj.postMember = (Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture) => {
+crudsObj.postMember = (Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone) => {
     return new Promise((resolve, reject) => {
-        pool.query('INSERT INTO members(Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', 
-        [Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture], 
+        pool.query('INSERT INTO members(Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+        [Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone], 
         (err, result) => {
             if (err) {
                 return reject(err);
@@ -38,10 +38,10 @@ crudsObj.getMemberById = (memberId) => {
     });
 };
 
-crudsObj.updateMember = (MemberID, Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture) => {
+crudsObj.updateMember = (MemberID, Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone) => {
     return new Promise((resolve, reject) => {
-        pool.query('UPDATE members SET Name = ?, Surname = ?, Email = ?, Phone = ?, Address = ?, City = ?, Country = ?, MembershipStatus = ?, ProfilePicture = ? WHERE MemberID = ?',
-            [Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, MemberID], 
+        pool.query('UPDATE members SET Name = ?, Surname = ?, Email = ?, Phone = ?, Address = ?, City = ?, Country = ?, MembershipStatus = ?, ProfilePicture = ?, Gender = ?, Suburb = ?, Zone = ? WHERE MemberID = ?',
+            [Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, MemberID], 
             (err, result) => {
                 if (err) {
                     return reject(err);

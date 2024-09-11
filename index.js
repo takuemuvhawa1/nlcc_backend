@@ -30,6 +30,7 @@ const ministryLeaderRouter = require('./routes/ministryLeaders');
 const smallGroupsRouter = require('./routes/smallGroups');
 const smallGroupLeadersRouter = require('./routes/smallGroupLeaders');
 const memberSmallGroupsRouter = require('./routes/memberSmallGroups');
+const eventRouter = require('./routes/events');
 
 const app = express();
 app.use(express.json());
@@ -44,6 +45,7 @@ app.use('/attendance', attendanceRouter);
 app.use('/contributions', contributionRouter);
 app.use('/pledges', pledgeRouter);
 app.use('/eventreg', eventRegistrationRouter);
+app.use('/events', eventRouter)
 app.use('/volunteeropp', volunteerOpportunityRouter);
 app.use('/volunteersignup', volunteerSignupRouter);
 app.use('/volattendance', volunteerSignupAttendanceRouter);

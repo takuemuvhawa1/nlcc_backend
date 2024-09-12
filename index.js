@@ -31,6 +31,7 @@ const smallGroupsRouter = require('./routes/smallGroups');
 const smallGroupLeadersRouter = require('./routes/smallGroupLeaders');
 const memberSmallGroupsRouter = require('./routes/memberSmallGroups');
 const eventRouter = require('./routes/events');
+const regAttendanceRouter = require('./routes/reg_attendance');
 
 const app = express();
 app.use(express.json());
@@ -54,6 +55,9 @@ app.use('/ministryleaders', ministryLeaderRouter);
 app.use('/smallgroups', smallGroupsRouter);
 app.use('/smallgroupleaders', smallGroupLeadersRouter);
 app.use('/membersmallgrp', memberSmallGroupsRouter);
+app.use('/regatt', regAttendanceRouter);
+
+
 //FILE UPLOADS
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {

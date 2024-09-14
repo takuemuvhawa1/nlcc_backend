@@ -32,6 +32,7 @@ const smallGroupLeadersRouter = require('./routes/smallGroupLeaders');
 const memberSmallGroupsRouter = require('./routes/memberSmallGroups');
 const eventRouter = require('./routes/events');
 const regAttendanceRouter = require('./routes/reg_attendance');
+const projectsRouter = require('./routes/projects');
 
 const app = express();
 app.use(express.json());
@@ -56,6 +57,7 @@ app.use('/smallgroups', smallGroupsRouter);
 app.use('/smallgroupleaders', smallGroupLeadersRouter);
 app.use('/membersmallgrp', memberSmallGroupsRouter);
 app.use('/regatt', regAttendanceRouter);
+app.use('/projects', projectsRouter);
 
 
 //FILE UPLOADS

@@ -5,11 +5,11 @@ const contributionsDbOperations = require('../cruds/contributions');
 contributionRouter.post('/', async (req, res) => {
     try {
         const postedValues = req.body;
-        const results = await contributionsDbOperations.postContribution(postedValues.MemberID, postedValues.Date, postedValues.Amount, postedValues.Method, postedValues.PledgeID);
+        const results = await contributionsDbOperations.postContribution(postedValues.MemberID, postedValues.Date, postedValues.Amount, postedValues.Method, postedValues.PledgeID, postedValues.ProjectID);
         res.json(results);
     } catch (e) {
         console.log(e);
-        res.sendStatus(500);
+        res.sendStatus(500); 
     }
 });
 
@@ -38,7 +38,7 @@ contributionRouter.put('/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const updatedValues = req.body;
-        const result = await contributionsDbOperations.updateContribution(id, updatedValues.MemberID, updatedValues.Date, updatedValues.Amount, updatedValues.Method, updatedValues.PledgeID);
+        const result = await contributionsDbOperations.updateContribution(id, updatedValues.MemberID, updatedValues.Date, updatedValues.Amount, updatedValues.Method, updatedValues.PledgeID, updatedValues.ProjectID);
         res.json(result);
     } catch (e) {
         console.log(e);

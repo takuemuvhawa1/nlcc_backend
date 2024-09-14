@@ -32,6 +32,16 @@ regAttendanceObj.getAttendanceById = (attendanceId) => {
     });
 };
 
+//Join events
+regAttendanceObj.getAttEvent = () => {
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT * FROM attendance_reg a JOIN events e ON a.EventID = e.EventID;', (err, results) => {
+            if (err) return reject(err);
+            return resolve(results);
+        });
+    });
+};
+
 regAttendanceObj.updateAttendance = (AttendanceID, TotalAttendance, RegDate, EventID) => {
     return new Promise((resolve, reject) => {
         pool.query('UPDATE attendance_reg SET TotalAttendance = ?, RegDate = ?, EventID = ? WHERE AttendanceID = ?',

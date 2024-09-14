@@ -34,6 +34,18 @@ regAttendanceRouter.get('/:id', async (req, res) => {
     }
 });
 
+//JOIN EVENTS
+regAttendanceRouter.get('/att/event', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const result = await attendanceDbOperations.getAttEvent();
+        res.json(result);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
 regAttendanceRouter.put('/:id', async (req, res) => {
     try {
         const id = req.params.id;

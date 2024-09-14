@@ -3,10 +3,10 @@ const pool = require('./poolfile');
 
 let pledgesObj = {};
 
-pledgesObj.postPledge = (MemberID, StartDate, EndDate, Amount, Frequency) => {
+pledgesObj.postPledge = (MemberID, StartDate, EndDate, Amount, Frequency, ProjectID) => {
     return new Promise((resolve, reject) => {
-        pool.query('INSERT INTO pledges(MemberID, StartDate, EndDate, Amount, Frequency) VALUES (?, ?, ?, ?, ?)', 
-        [MemberID, StartDate, EndDate, Amount, Frequency], 
+        pool.query('INSERT INTO pledges(MemberID, StartDate, EndDate, Amount, Frequency, ProjectID) VALUES (?, ?, ?, ?, ?, ?)', 
+        [MemberID, StartDate, EndDate, Amount, Frequency, ProjectID], 
         (err, result) => {
             if (err) return reject(err);
             return resolve({ status: '200', message: 'Pledge added successfully' });
@@ -32,10 +32,10 @@ pledgesObj.getPledgeById = (pledgeId) => {
     });
 };
 
-pledgesObj.updatePledge = (PledgeID, MemberID, StartDate, EndDate, Amount, Frequency) => {
+pledgesObj.updatePledge = (PledgeID, MemberID, StartDate, EndDate, Amount, Frequency, ProjectID) => {
     return new Promise((resolve, reject) => {
-        pool.query('UPDATE pledges SET MemberID = ?, StartDate = ?, EndDate = ?, Amount = ?, Frequency = ? WHERE PledgeID = ?',
-            [MemberID, StartDate, EndDate, Amount, Frequency, PledgeID], 
+        pool.query('UPDATE pledges SET MemberID = ?, StartDate = ?, EndDate = ?, Amount = ?, Frequency = ?, ProjectID = ? WHERE PledgeID = ?',
+            [MemberID, StartDate, EndDate, Amount, Frequency, ProjectID, PledgeID], 
             (err, result) => {
                 if (err) return reject(err);
                 return resolve({ status: '200', message: 'Pledge updated successfully' });

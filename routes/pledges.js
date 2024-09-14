@@ -6,7 +6,7 @@ const pledgesDbOperations = require('../cruds/pledges');
 pledgeRouter.post('/', async (req, res) => {
     try {
         const postedValues = req.body;
-        const results = await pledgesDbOperations.postPledge(postedValues.MemberID, postedValues.StartDate, postedValues.EndDate, postedValues.Amount, postedValues.Frequency);
+        const results = await pledgesDbOperations.postPledge(postedValues.MemberID, postedValues.StartDate, postedValues.EndDate, postedValues.Amount, postedValues.Frequency, postedValues.ProjectID);
         res.json(results);
     } catch (e) {
         console.log(e);
@@ -39,7 +39,7 @@ pledgeRouter.put('/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const updatedValues = req.body;
-        const result = await pledgesDbOperations.updatePledge(id, updatedValues.MemberID, updatedValues.StartDate, updatedValues.EndDate, updatedValues.Amount, updatedValues.Frequency);
+        const result = await pledgesDbOperations.updatePledge(id, updatedValues.MemberID, updatedValues.StartDate, updatedValues.EndDate, updatedValues.Amount, updatedValues.Frequency, updatedValues.ProjectID);
         res.json(result);
     } catch (e) {
         console.log(e);

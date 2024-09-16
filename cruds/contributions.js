@@ -34,7 +34,7 @@ contributionsObj.getContributionById = (contributionId) => {
 
 contributionsObj.updateContribution = (ContributionID, MemberID, Date, Amount, Method, PledgeID, ProjectID) => {
     return new Promise((resolve, reject) => {
-        pool.query('UPDATE contributions SET MemberID = ?, Date = ?, Amount = ?, Method = ?, PledgeID = ? ProjectID = ? WHERE ContributionID = ?',
+        pool.query('UPDATE contributions SET MemberID = ?, Date = ?, Amount = ?, Method = ?, PledgeID = ?, ProjectID = ? WHERE ContributionID = ?',
             [MemberID, Date, Amount, Method, PledgeID, ProjectID, ContributionID], 
             (err, result) => {
                 if (err) return reject(err);

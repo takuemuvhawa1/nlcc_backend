@@ -3,10 +3,10 @@ const pool = require('./poolfile');
 
 let smallGroupsObj = {};
 
-smallGroupsObj.postSmallGroup = (Name, Description, CalendarID) => {
+smallGroupsObj.postSmallGroup = (Name, Description, CalendarID, Location) => {
     return new Promise((resolve, reject) => {
-        pool.query('INSERT INTO smallgroups(Name, Description, CalendarID) VALUES (?, ?, ?)', 
-        [Name, Description, CalendarID], 
+        pool.query('INSERT INTO smallgroups(Name, Description, CalendarID, Location) VALUES (?, ?, ?, ?)', 
+        [Name, Description, CalendarID, Location], 
         (err, result) => {
             if (err) return reject(err);
             return resolve({ status: '200', message: 'Small group added successfully' });
@@ -32,10 +32,10 @@ smallGroupsObj.getSmallGroupById = (smallGroupId) => {
     });
 };
 
-smallGroupsObj.updateSmallGroup = (SmallGroupID, Name, Description, CalendarID) => {
+smallGroupsObj.updateSmallGroup = (SmallGroupID, Name, Description, CalendarID, Location) => {
     return new Promise((resolve, reject) => {
-        pool.query('UPDATE smallgroups SET Name = ?, Description = ?, CalendarID = ? WHERE SmallGroupID = ?',
-            [Name, Description, CalendarID, SmallGroupID], 
+        pool.query('UPDATE smallgroups SET Name = ?, Description = ?, CalendarID = ?, Location = ? WHERE SmallGroupID = ?',
+            [Name, Description, CalendarID, Location, SmallGroupID], 
             (err, result) => {
                 if (err) return reject(err);
                 return resolve({ status: '200', message: 'Small group updated successfully' });

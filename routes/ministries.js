@@ -23,6 +23,16 @@ ministryRouter.get('/', async (req, res) => {
     }
 });
 
+ministryRouter.get('/ministry-leaders', async (req, res) => {
+    try {
+        const results = await ministriesDbOperations.getMinistriesJoin();
+        res.json(results);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
 ministryRouter.get('/:id', async (req, res) => {
     try {
         const id = req.params.id;

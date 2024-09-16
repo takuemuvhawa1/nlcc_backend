@@ -5,7 +5,7 @@ const smallGroupsDbOperations = require('../cruds/smallGroups');
 smallGroupsRouter.post('/', async (req, res) => {
     try {
         const postedValues = req.body;
-        const results = await smallGroupsDbOperations.postSmallGroup(postedValues.Name, postedValues.Description, postedValues.CalendarID);
+        const results = await smallGroupsDbOperations.postSmallGroup(postedValues.Name, postedValues.Description, postedValues.CalendarID, postedValues.Location);
         res.json(results);
     } catch (e) {
         console.log(e);
@@ -38,7 +38,7 @@ smallGroupsRouter.put('/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const updatedValues = req.body;
-        const result = await smallGroupsDbOperations.updateSmallGroup(id, updatedValues.Name, updatedValues.Description, updatedValues.CalendarID);
+        const result = await smallGroupsDbOperations.updateSmallGroup(id, updatedValues.Name, updatedValues.Description, updatedValues.CalendarID, updatedValues.Location);
         res.json(result);
     } catch (e) {
         console.log(e);

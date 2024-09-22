@@ -38,6 +38,17 @@ crudsObj.getMemberById = (memberId) => {
     });
 };
 
+crudsObj.getMemberById = (memberId) => {
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT * FROM members WHERE MemberID = ?', [memberId], (err, results) => {
+            if (err) {
+                return reject(err);
+            }
+            return resolve(results);
+        });
+    });
+};
+
 crudsObj.updateMember = (MemberID, Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone) => {
     return new Promise((resolve, reject) => {
         pool.query('UPDATE members SET Name = ?, Surname = ?, Email = ?, Phone = ?, Address = ?, City = ?, Country = ?, MembershipStatus = ?, ProfilePicture = ?, Gender = ?, Suburb = ?, Zone = ? WHERE MemberID = ?',

@@ -6,7 +6,7 @@ const volunteerOpportunitiesDbOperations = require('../cruds/volunteerOpportunit
 volunteerOpportunityRouter.post('/', async (req, res) => {
     try {
         const postedValues = req.body;
-        const results = await volunteerOpportunitiesDbOperations.postOpportunity(postedValues.Name, postedValues.Date, postedValues.Time, postedValues.Location, postedValues.Description);
+        const results = await volunteerOpportunitiesDbOperations.postOpportunity(postedValues.Name, postedValues.Date, postedValues.Time, postedValues.Location, postedValues.Description, postedValues.EventID);
         res.json(results);
     } catch (e) {
         console.log(e);

@@ -3,10 +3,10 @@ const pool = require('./poolfile');
 
 let volunteerOpportunitiesObj = {};
 
-volunteerOpportunitiesObj.postOpportunity = (Name, Date, Time, Location, Description) => {
+volunteerOpportunitiesObj.postOpportunity = (Name, Date, Time, Location, Description, EventID) => {
     return new Promise((resolve, reject) => {
-        pool.query('INSERT INTO volunteeropportunities(Name, Date, Time, Location, Description) VALUES (?, ?, ?, ?, ?)', 
-        [Name, Date, Time, Location, Description], 
+        pool.query('INSERT INTO volunteeropportunities(Name, Date, Time, Location, Description, EventID) VALUES (?, ?, ?, ?, ?, ?)', 
+        [Name, Date, Time, Location, Description, EventID], 
         (err, result) => {
             if (err) return reject(err);
             return resolve({ status: '200', message: 'Volunteer opportunity added successfully' });

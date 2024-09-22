@@ -46,8 +46,18 @@ crudsObj.setPassword = async (email, otp, password) => {
                     return reject(err);
                 }
 
-                return resolve({ status: '200', message: 'Password set successfully' });
+                pool.query('UPDATE members SET Otp = ? WHERE email = ?', [null, email])
 
+                pool.query('SELECT * FROM members WHERE email = ?', [email], async (err, results) => {
+                    if (err) {
+                        return reject(err);
+                    }
+
+                    const member = results[0];
+                    const { Password, ...memberData } = member;
+
+                return resolve({ status: '200', message: 'Password set successfully', member: memberData });
+                });
             });
         })
     });

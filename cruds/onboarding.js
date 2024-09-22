@@ -19,12 +19,12 @@ crudsObj.searchMember = async (email) => {
 
             for (let i = 1; i < 5; i++) {
                 randNum += (Math.floor(Math.random() * 10)).toString();
-              }
+            }
 
-              pool.query('UPDATE members SET Otp = ? WHERE email = ?', [randNum, email])
+            pool.query('UPDATE members SET Otp = ? WHERE email = ?', [randNum, email])
 
             // Return user data without the password
-            const {...memberData } = member; // Exclude password from user data
+            const { ...memberData } = member; // Exclude password from user data
             return resolve({ status: '200', message: 'Email found', member: memberData, randNum });
 
         });
@@ -33,14 +33,23 @@ crudsObj.searchMember = async (email) => {
 
 crudsObj.setPassword = async (email, otp, password) => {
     return new Promise((resolve, reject) => {
-        pool.query('UPDATE members SET Password = ? WHERE email = ?', [password, email], async (err, results) => {
+        pool.query('SELECT Name, Surname FROM members WHERE email = ?', [email], async (err, results) => {
             if (err) {
                 return reject(err);
             }
-           
-            return resolve({ status: '200', message: 'Password set successfully' });
+            if (results.length === 0) {
+                return resolve({ status: '401', message: 'Email not found' });
+            }
 
-        });
+            pool.query('UPDATE members SET Password = ? WHERE email = ?', [password, email], async (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+
+                return resolve({ status: '200', message: 'Password set successfully' });
+
+            });
+        })
     });
 };
 
@@ -55,7 +64,7 @@ crudsObj.resendOtp = async (email) => {
             }
             const member = results[0]; // Get the user data from the results
 
-           //Email to send otp
+            //Email to send otp
             return resolve({ status: '200', message: 'OTP sent successfully' });
 
         });
@@ -72,9 +81,9 @@ crudsObj.signIn = async (email, password) => {
             if (results.length === 0) {
                 return resolve({ status: '401', message: 'Invalid email or password' });
             }
-            const member = results[0]; 
+            const member = results[0];
 
-            const { Password, ...memberData } = member; 
+            const { Password, ...memberData } = member;
             return resolve({ status: '200', message: 'Login successful', member: memberData });
 
         });

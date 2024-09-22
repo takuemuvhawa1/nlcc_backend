@@ -35,6 +35,7 @@ const regAttendanceRouter = require('./routes/reg_attendance');
 const projectsRouter = require('./routes/projects');
 const mailerRouter = require('./routes/mailer');
 const onBoardingRouter = require('./routes/onboarding');
+const eventTasksRouter = require('./routes/events_tasks');
 
 const app = express();
 app.use(express.json());
@@ -49,7 +50,8 @@ app.use('/attendance', attendanceRouter);
 app.use('/contributions', contributionRouter);
 app.use('/pledges', pledgeRouter);
 app.use('/eventreg', eventRegistrationRouter);
-app.use('/events', eventRouter)
+app.use('/events', eventRouter);
+app.use('/events-tasks', eventTasksRouter);
 app.use('/volunteeropp', volunteerOpportunityRouter);
 app.use('/volunteersignup', volunteerSignupRouter);
 app.use('/volattendance', volunteerSignupAttendanceRouter);

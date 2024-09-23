@@ -3,6 +3,8 @@ require('dotenv').config();
 const cors = require('cors');
 const https = require('https');
 
+const authenticateToken = require('./utilities/authenticateToken');
+
 const multer = require('multer');
 const axios = require('axios');
 

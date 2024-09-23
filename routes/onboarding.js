@@ -2,6 +2,9 @@ const express = require('express');
 const onBoardingRouter = express.Router();
 const onBoardingDbOperations = require('../cruds/onboarding'); 
 
+const { generateToken, verifyToken } = require('../utilities/jwtUtils');
+const authenticateToken = require('../utilities/authenticateToken');
+
 onBoardingRouter.post('/searchmember', async (req, res) => {
     try {
         const { email } = req.body;

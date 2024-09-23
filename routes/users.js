@@ -18,6 +18,18 @@ userRouter.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
         let result = await usersDbOperations.authenticateUser(email, password);
+
+        if (!result) {
+            return res.status(401).send('Invalid credentials');
+        }
+
+         // Generate JWT token
+         const token = generateToken(result); 
+         console.log('TOKEN: ', token);
+ 
+         // Send user data and token in one response
+         res.json({ result: result, token });
+
         res.status(result.status).json(result);
     } catch (e) {
         console.log(e);

@@ -8,7 +8,7 @@ eventTasksRouter.post('/', async (req, res) => {
 
         // Post the event first
         const eventResult = await eventsDbOperations.postEvent(type, theme, description, date, time, enddate, endtime);
-        
+
         // Get the newly created event ID
         const eventId = eventResult.insertId;
 
@@ -27,7 +27,7 @@ eventTasksRouter.post('/', async (req, res) => {
 eventTasksRouter.get('/', async (req, res) => {
     try {
         const events = await eventsDbOperations.getEvents(); // Fetch all events
-        const tasksPromises = events.map(event => 
+        const tasksPromises = events.map(event =>
             eventsDbOperations.getVolunteerTasksByEventId(event.id)
         );
 
@@ -53,7 +53,7 @@ eventTasksRouter.get('/:id', async (req, res) => {
         const id = req.params.id;
         const event = await eventsDbOperations.getEventById(id);
         const tasks = await eventsDbOperations.getVolunteerTasksByEventId(id);
-        
+
         // Combine event and tasks into the desired JSON structure
         const response = {
             ...event,
@@ -61,6 +61,17 @@ eventTasksRouter.get('/:id', async (req, res) => {
         };
 
         res.json(response);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+eventTasksRouter.delete('/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const result = await eventsDbOperations.deleteEvent(id);
+        res.json(result);
     } catch (e) {
         console.log(e);
         res.sendStatus(500);

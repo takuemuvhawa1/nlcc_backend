@@ -26,13 +26,26 @@ eventTasksRouter.post('/', async (req, res) => {
 
 eventTasksRouter.get('/', async (req, res) => {
     try {
-        const results = await eventsDbOperations.getEvents();
-        res.json(results);
+        const events = await eventsDbOperations.getEvents(); // Fetch all events
+        const tasksPromises = events.map(event => 
+            eventsDbOperations.getVolunteerTasksByEventId(event.id)
+        );
+
+        const tasks = await Promise.all(tasksPromises); // Fetch tasks for each event
+
+        // Combine events and their respective tasks into the desired JSON structure
+        const response = events.map((event, index) => ({
+            ...event,
+            volunteertasks: tasks[index]
+        }));
+
+        res.json(response);
     } catch (e) {
         console.log(e);
         res.sendStatus(500);
     }
 });
+
 
 
 eventTasksRouter.get('/:id', async (req, res) => {

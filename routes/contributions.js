@@ -23,6 +23,27 @@ contributionRouter.get('/', async (req, res) => {
     }
 });
 
+contributionRouter.get('/with-projects', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const results = await contributionsDbOperations.getAllContributionsWithProjects();
+        res.json(results);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+contributionRouter.get('/with-projects/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const results = await contributionsDbOperations.getContributionsWithProjects(id);
+        res.json(results);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
 contributionRouter.get('/:id', async (req, res) => {
     try {
         const id = req.params.id;

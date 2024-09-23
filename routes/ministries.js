@@ -33,6 +33,86 @@ ministryRouter.get('/ministry-leaders', async (req, res) => {
     }
 });
 
+// ministryRouter.get('/ministry-leaders/:memberId', async (req, res) => {
+//     const memberId = req.params.memberId; 
+//     try {
+//         const results = await ministriesDbOperations.getMinistriesJoin2(memberId);
+//         const response = results.map(ministry => {
+//             return {
+//                 id: ministry.MinistryID,
+//                 name: ministry.MinistryName,
+//                 description: ministry.Description,
+//                 admin: `${ministry.LeaderName} ${ministry.LeaderSurname}`,
+//                 adminphone: ministry.Phoneno,
+//                 joined: ministry.MemberID ? true : false,
+//             };
+//         });
+//         res.json(response);
+//     } catch (e) {
+//         console.log(e);
+//         res.sendStatus(500);
+//     }
+// });
+
+// ministryRouter.get('/ministry-leaders/:memberId', async (req, res) => {
+//     const memberId = req.params.memberId; 
+//     try {
+//         const results = await ministriesDbOperations.getMinistriesJoin2(memberId);
+//         const response = results.map(ministry => {
+//             const leaderStatus = ministry.LeaderID == memberId; 
+            
+//             return {
+//                 id: ministry.MinistryID,
+//                 name: ministry.MinistryName,
+//                 description: ministry.Description,
+//                 leaderID: ministry.LeaderID,
+//                 admin: `${ministry.LeaderName} ${ministry.LeaderSurname}`,
+//                 adminphone: ministry.Phoneno,
+//                 joined: ministry.MemberID ? true : false, 
+//                 leaderStatus: leaderStatus
+//             };
+//         });
+//         res.json(response);
+//     } catch (e) {
+//         console.log(e);
+//         res.sendStatus(500);
+//     }
+// });
+
+ministryRouter.get('/ministry-leaders/:memberId', async (req, res) => {
+    const memberId = req.params.memberId; 
+    try {
+        const results = await ministriesDbOperations.getMinistriesJoin2(memberId);
+        const response = await Promise.all(results.map(async ministry => {
+            const leaderStatus = ministry.LeaderID == memberId; 
+            let members = [];
+
+            // If the user is the leader, fetch all members for this ministry
+            if (leaderStatus) {
+                members = await ministriesDbOperations.getMembersByMinistryId(ministry.MinistryID);
+            }
+
+            return {
+                id: ministry.MinistryID,
+                name: ministry.MinistryName,
+                description: ministry.Description,
+                leaderID: ministry.LeaderID,
+                admin: `${ministry.LeaderName} ${ministry.LeaderSurname}`,
+                adminphone: ministry.Phoneno,
+                joined: ministry.MemberID ? true : false, 
+                leaderStatus: leaderStatus,
+                members: members 
+            };
+        }));
+        res.json(response);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+
+
 ministryRouter.get('/:id', async (req, res) => {
     try {
         const id = req.params.id;

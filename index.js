@@ -36,6 +36,9 @@ const projectsRouter = require('./routes/projects');
 const mailerRouter = require('./routes/mailer');
 const onBoardingRouter = require('./routes/onboarding');
 const eventTasksRouter = require('./routes/events_tasks');
+const notificationsRouter = require('./routes/notifications');
+const sermonsRouter = require('./routes/sermons');
+const memberMinistryRouter = require('./routes/memberMinistries');
 
 const app = express();
 app.use(express.json());
@@ -57,6 +60,7 @@ app.use('/volunteersignup', volunteerSignupRouter);
 app.use('/volattendance', volunteerSignupAttendanceRouter);
 app.use('/ministries', ministryRouter);
 app.use('/ministryleaders', ministryLeaderRouter);
+app.use('/ministrymembers', memberMinistryRouter);
 app.use('/smallgroups', smallGroupsRouter);
 app.use('/smallgroupleaders', smallGroupLeadersRouter);
 app.use('/membersmallgrp', memberSmallGroupsRouter);
@@ -64,6 +68,8 @@ app.use('/regatt', regAttendanceRouter);
 app.use('/projects', projectsRouter);
 app.use('/mailer', mailerRouter);
 app.use('/onboarding', onBoardingRouter);
+app.use('/notifications', notificationsRouter);
+app.use('/sermons', sermonsRouter);
 
 //FILE UPLOADS
 const storage = multer.diskStorage({

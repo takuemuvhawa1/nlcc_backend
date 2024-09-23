@@ -56,7 +56,7 @@ crudsObj.setPassword = async (email, otp, password) => {
                     const member = results[0];
                     const { Password, ...memberData } = member;
 
-                return resolve({ status: '200', message: 'Password set successfully', member: memberData });
+                    return resolve({ status: '200', message: 'Password set successfully', member: memberData });
                 });
             });
         })
@@ -96,6 +96,44 @@ crudsObj.signIn = async (email, password) => {
             const { Password, ...memberData } = member;
             return resolve({ status: '200', message: 'Login successful', member: memberData });
 
+        });
+    });
+};
+
+crudsObj.getMinistriesJoin2 = (memberId) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT 
+            m.Name AS MinistryName
+            FROM 
+            ministries m 
+            LEFT JOIN 
+            memberministries mm ON m.MinistryID = mm.MinistryID 
+            WHERE 
+            mm.MemberID = ?`;
+
+        pool.query(query, [memberId], (err, results) => {
+            if (err) return reject(err);
+            return resolve(results);
+        });
+    });
+};
+
+crudsObj.getCellGroupsJoin = (memberId) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+           SELECT 
+           sg.Name AS SmallGroupName
+           FROM 
+           smallgroups sg 
+           LEFT JOIN   
+           membersmallgroups mg ON sg.SmallGroupID = mg.SmallGroupID 
+           WHERE 
+           mg.MemberID = 101`;
+
+        pool.query(query, [memberId], (err, results) => {
+            if (err) return reject(err);
+            return resolve(results);
         });
     });
 };

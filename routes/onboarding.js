@@ -38,11 +38,39 @@ onBoardingRouter.post('/resendotp', async (req, res) => {
     }
 });
 
-//Login
+//Login 
+// onBoardingRouter.post('/signin', async (req, res) => {
+//     try {
+//         const { email, password } = req.body;
+//         let result = await onBoardingDbOperations.signIn(email, password);
+//         res.status(result.status).json(result);
+
+//         const results = await ministriesDbOperations.getMinistriesJoin2(memberId);
+
+//     } catch (e) {
+//         console.log(e);
+//         res.sendStatus(500);
+//     }
+// });
+
+// Login 
 onBoardingRouter.post('/signin', async (req, res) => {
     try {
         const { email, password } = req.body;
         let result = await onBoardingDbOperations.signIn(email, password);
+
+        if (result.status === '200') {
+            const memberId = result.member.MemberID; 
+            const ministries = await onBoardingDbOperations.getMinistriesJoin2(memberId);
+            result.member.ministries = ministries; 
+        }
+
+        if (result.status === '200') {
+            const memberId = result.member.MemberID; 
+            const cellgroups = await onBoardingDbOperations.getCellGroupsJoin(memberId); 
+            result.member.cellgroups = cellgroups; 
+        }
+
         res.status(result.status).json(result);
     } catch (e) {
         console.log(e);

@@ -71,12 +71,14 @@ onBoardingRouter.post('/signin', async (req, res) => {
             const token = generateToken(result); 
             console.log('TOKEN: ', token);
     
-            // Send user data and token in one response
-            res.status(result.status).json({
+            // Send user data, token, status, and message in one response
+            res.status(200).json({
+                status: "200",
+                message: "Login successful",
                 member: result.member,
                 token
             });
-            return; 
+            return; // Ensure to exit after sending response
         }
 
         res.status(result.status).json(result);
@@ -85,6 +87,7 @@ onBoardingRouter.post('/signin', async (req, res) => {
         res.sendStatus(500);
     }
 });
+
 
 
 

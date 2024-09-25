@@ -3,10 +3,10 @@ const pool = require('./poolfile');
 
 let memberSmallGroupsObj = {};
 
-memberSmallGroupsObj.postMemberSmallGroup = (MemberID, SmallGroupID, StartDate, EndDate) => {
+memberSmallGroupsObj.postMemberSmallGroup = (MemberID, SmallGroupID, StartDate, EndDate, Request) => {
     return new Promise((resolve, reject) => {
-        pool.query('INSERT INTO membersmallgroups(MemberID, SmallGroupID, StartDate, EndDate) VALUES (?, ?, ?, ?)', 
-        [MemberID, SmallGroupID, StartDate, EndDate], 
+        pool.query('INSERT INTO membersmallgroups(MemberID, SmallGroupID, StartDate, EndDate, Request) VALUES (?, ?, ?, ?, ?)', 
+        [MemberID, SmallGroupID, StartDate, EndDate, Request], 
         (err, result) => {
             if (err) return reject(err);
             return resolve({ status: '200', message: 'Member small group added successfully' });
@@ -32,10 +32,10 @@ memberSmallGroupsObj.getMemberSmallGroupById = (memberSmallGroupId) => {
     });
 };
 
-memberSmallGroupsObj.updateMemberSmallGroup = (MemberSmallGroupID, MemberID, SmallGroupID, StartDate, EndDate) => {
+memberSmallGroupsObj.updateMemberSmallGroup = (MemberSmallGroupID, MemberID, SmallGroupID, StartDate, EndDate, Request) => {
     return new Promise((resolve, reject) => {
-        pool.query('UPDATE membersmallgroups SET MemberID = ?, SmallGroupID = ?, StartDate = ?, EndDate = ? WHERE MemberSmallGroupID = ?',
-            [MemberID, SmallGroupID, StartDate, EndDate, MemberSmallGroupID], 
+        pool.query('UPDATE membersmallgroups SET MemberID = ?, SmallGroupID = ?, StartDate = ?, EndDate = ?, Request = ? WHERE MemberSmallGroupID = ?',
+            [MemberID, SmallGroupID, StartDate, EndDate, Request, MemberSmallGroupID], 
             (err, result) => {
                 if (err) return reject(err);
                 return resolve({ status: '200', message: 'Member small group updated successfully' });

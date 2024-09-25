@@ -66,6 +66,60 @@ smallGroupsRouter.get('/:id', async (req, res) => {
     }
 });
 
+//CELL GROUPS FOR ADMINS
+smallGroupsRouter.get('/smallgroups-leaders/:memberId', async (req, res) => {
+    const memberId = req.params.memberId; // Get member ID from request parameters
+    try {
+        const results = await smallGroupsDbOperations.getSmallGroupsJoin(memberId);
+        const response = await Promise.all(results.map(async group => {
+            const leaderStatus = group.LeaderID == memberId; 
+            let members = [];
+            let joinReq = [];
+            let leaveReq = [];
+
+            // If the user is the leader, fetch all members for this small group
+            if (leaderStatus) {
+                members = await smallGroupsDbOperations.getMembersBySmallGroupId(group.SmallGroupID);
+            }
+            if (leaderStatus) {
+                joinReq = await smallGroupsDbOperations.getMembersBySmallGroupJoinReq(group.SmallGroupID);
+            }
+            if (leaderStatus) {
+                leaveReq = await smallGroupsDbOperations.getMembersBySmallGroupLeaveReq(group.SmallGroupID);
+            }
+
+            return {
+                id: group.SmallGroupID,
+                name: group.Name,
+                description: group.Description,
+                location: group.Location,
+                admin: `${group.LeaderName} ${group.LeaderSurname}`,
+                adminphone: group.Phoneno,
+                joined: group.MemberID ? true : false, 
+                leaderStatus: leaderStatus,
+                Totalembers: members.length,
+                members: members,
+                joinrequesting: joinReq.length,
+                requestingdata: joinReq,
+                leaverequesting: leaveReq.length,
+                leavingdata: leaveReq
+            };
+        }));
+
+        // Filter the response to include only small groups where leaderStatus is true
+        const filteredResponse = response.filter(group => group.leaderStatus);
+        res.json(filteredResponse);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+
+
+
+
+
 smallGroupsRouter.put('/:id', async (req, res) => {
     try {
         const id = req.params.id;

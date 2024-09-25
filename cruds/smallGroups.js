@@ -80,6 +80,77 @@ smallGroupsObj.getSmallGroupsJoin = (memberId) => {
     });
 };
 
+
+//NEW CRUDS FOR LEADERS
+smallGroupsObj.getMembersBySmallGroupId = (smallGroupId) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT 
+                mem.MemberID, 
+                mem.Name, 
+                mem.Surname, 
+                mem.Phone 
+            FROM 
+                members mem 
+            JOIN 
+                membersmallgroups msg ON mem.MemberID = msg.MemberID 
+            WHERE 
+                (msg.SmallGroupID = ? AND msg.request = "Approved")`;
+
+        pool.query(query, [smallGroupId], (err, results) => {
+            if (err) return reject(err);
+            return resolve(results);
+        });
+    });
+};
+
+// Join Requests
+smallGroupsObj.getMembersBySmallGroupJoinReq = (smallGroupId) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT 
+                mem.MemberID, 
+                mem.Name, 
+                mem.Surname, 
+                mem.Phone 
+            FROM 
+                members mem 
+            JOIN 
+                membersmallgroups msg ON mem.MemberID = msg.MemberID 
+            WHERE 
+                (msg.SmallGroupID = ? AND msg.request IS NULL)`;
+
+        pool.query(query, [smallGroupId], (err, results) => {
+            if (err) return reject(err);
+            return resolve(results);
+        });
+    });
+};
+
+// Leave Requests
+smallGroupsObj.getMembersBySmallGroupLeaveReq = (smallGroupId) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT 
+                mem.MemberID, 
+                mem.Name, 
+                mem.Surname, 
+                mem.Phone 
+            FROM 
+                members mem 
+            JOIN 
+                membersmallgroups msg ON mem.MemberID = msg.MemberID 
+            WHERE 
+                (msg.SmallGroupID = ? AND msg.request = "Leave")`;
+
+        pool.query(query, [smallGroupId], (err, results) => {
+            if (err) return reject(err);
+            return resolve(results);
+        });
+    });
+};
+
+
 smallGroupsObj.getSmallGroupById = (smallGroupId) => {
     return new Promise((resolve, reject) => {
         pool.query('SELECT * FROM smallgroups WHERE SmallGroupID = ?', [smallGroupId], (err, results) => {

@@ -141,7 +141,7 @@ ministryRouter.get('/ministry-leaders/:memberId', async (req, res) => {
                 adminphone: ministry.Phoneno,
                 joined: ministry.MemberID ? true : false, 
                 leaderStatus: leaderStatus,
-                members : members.length,
+                ToatlMembers : members.length,
                 members: members,
                 joinrequesting : joinReq.length,
                 requestingdata: joinReq,

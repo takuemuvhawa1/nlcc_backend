@@ -5,7 +5,7 @@ const notificationsDbOperations = require('../cruds/notifications');
 notificationsRouter.post('/', async (req, res) => {
     try {
         const postedValues = req.body;
-        const results = await notificationsDbOperations.postNotification(postedValues.type, postedValues.theme, postedValues.date, postedValues.time, postedValues.MemberID);
+        const results = await notificationsDbOperations.postNotification(postedValues.header, postedValues.content, postedValues.date, postedValues.time, postedValues.MemberID);
         res.json(results);
     } catch (e) {
         console.log(e);
@@ -38,7 +38,7 @@ notificationsRouter.put('/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const updatedValues = req.body;
-        const result = await notificationsDbOperations.updateNotification(id, updatedValues.type, updatedValues.theme, updatedValues.date, updatedValues.time, updatedValues.MemberID);
+        const result = await notificationsDbOperations.updateNotification(id, updatedValues.header, updatedValues.content, updatedValues.date, updatedValues.time, updatedValues.MemberID);
         res.json(result);
     } catch (e) {
         console.log(e);

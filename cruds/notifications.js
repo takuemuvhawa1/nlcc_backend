@@ -3,10 +3,10 @@ const pool = require('./poolfile');
 
 const notificationsObj = {};
 
-notificationsObj.postNotification = (type, theme, date, time, MemberID) => {
+notificationsObj.postNotification = (header, content, date, time, MemberID) => {
     return new Promise((resolve, reject) => {
-        pool.query('INSERT INTO notifications(type, theme, date, time, MemberID) VALUES (?, ?, ?, ?)', 
-        [type, theme, date, time, MemberID], 
+        pool.query('INSERT INTO notifications(header, content, date, time, MemberID) VALUES (?, ?, ?, ?)', 
+        [header, content, date, time, MemberID], 
         (err, result) => {
             if (err) return reject(err);
             return resolve({ status: '200', message: 'Notification added successfully' });
@@ -16,7 +16,7 @@ notificationsObj.postNotification = (type, theme, date, time, MemberID) => {
 
 notificationsObj.getNotifications = () => {
     return new Promise((resolve, reject) => {
-        pool.query(`SELECT n.*, m.Name, m.Surname 
+        pool.query(`SELECT n.*, m.Name AS senderName, m.Surname AS senderSurname
 FROM notifications n
 JOIN members m ON n.MemberID = m.MemberID`, (err, results) => {
             if (err) return reject(err);
@@ -36,10 +36,10 @@ notificationsObj.getNotificationById = (id) => {
     });
 };
 
-notificationsObj.updateNotification = (id, type, theme, date, time, MemberID) => {
+notificationsObj.updateNotification = (id, header, content, date, time, MemberID) => {
     return new Promise((resolve, reject) => {
-        pool.query('UPDATE notifications SET type = ?, theme = ?, date = ?, time = ?, MemberID = ? WHERE id = ?',
-            [type, theme, date, time, MemberID, id], 
+        pool.query('UPDATE notifications SET header = ?, content = ?, date = ?, time = ?, MemberID = ? WHERE id = ?',
+            [header, content, date, time, MemberID, id], 
             (err, result) => {
                 if (err) return reject(err);
                 return resolve({ status: '200', message: 'Notification updated successfully' });

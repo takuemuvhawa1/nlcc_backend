@@ -69,7 +69,17 @@ onBoardingRouter.post('/signin', async (req, res) => {
             const memberId = result.member.MemberID; 
             const cellgroups = await onBoardingDbOperations.getCellGroupsJoin(memberId); 
             result.member.cellgroups = cellgroups; 
+
+            // Generate JWT token
+            const token = generateToken(result); 
+            console.log('TOKEN: ', token);
+    
+            // Send user data and token in one response
+            res.json({ result: result, token });
         }
+
+
+
 
         res.status(result.status).json(result);
     } catch (e) {

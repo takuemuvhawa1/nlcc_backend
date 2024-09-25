@@ -43,6 +43,69 @@ memberSmallGroupsObj.updateMemberSmallGroup = (MemberSmallGroupID, MemberID, Sma
     });
 };
 
+//Request to leave
+memberSmallGroupsObj.updateLeaveMemberSmallGroup = (MemberID, SmallGroupID) => {
+    return new Promise((resolve, reject) => {
+        pool.query('UPDATE membersmallgroups SET Request = "Leave" WHERE MemberID = ? AND SmallGroupID = ?',
+            [MemberID, SmallGroupID], 
+            (err, result) => {
+                if (err) return reject(err);
+                if (result.affectedRows > 0) {
+                    return resolve({ status: '200', message: 'Member small group updated successfully' });
+                } else {
+                    return resolve({ status: '404', message: 'No request found to approve or already approved.' });
+                }
+            });
+    });
+};
+//Approve Join
+memberSmallGroupsObj.updateApproveMemberSmallGroup = (MemberID, SmallGroupID) => {
+    return new Promise((resolve, reject) => {
+        pool.query('UPDATE membersmallgroups SET Request = "Approved" WHERE MemberID = ? AND SmallGroupID = ?',
+            [MemberID, SmallGroupID], 
+            (err, result) => {
+                if (err) return reject(err);
+                if (result.affectedRows > 0) {
+                    return resolve({ status: '200', message: 'Member small group updated successfully' });
+                } else {
+                    return resolve({ status: '404', message: 'No request found to approve or already approved.' });
+                }
+            });
+    });
+};
+
+// Approve Leave
+memberSmallGroupsObj.updateApproveLeaveMemberSmallGroup = (MemberID, SmallGroupID) => {
+    return new Promise((resolve, reject) => {
+        pool.query('UPDATE membersmallgroups SET Request = "Left" WHERE MemberID = ? AND SmallGroupID = ?',
+            [MemberID, SmallGroupID], 
+            (err, result) => {
+                if (err) return reject(err);
+                if (result.affectedRows > 0) {
+                    return resolve({ status: '200', message: 'Member small group updated successfully' });
+                } else {
+                    return resolve({ status: '404', message: 'No request found to approve or already approved.' });
+                }
+            });
+    });
+};
+
+//Request to Join a cell
+memberSmallGroupsObj.postMemberSmallGroupReqJoin = (MemberID, SmallGroupID) => {
+    return new Promise((resolve, reject) => {
+
+        const currentDate = getCurrentDate();
+
+        pool.query('INSERT INTO membersmallgroups(MemberID, SmallGroupID, StartDate, EndDate) VALUES (?, ?, ?, ?)', 
+        [MemberID, SmallGroupID, currentDate, currentDate ], 
+        (err, result) => {
+            if (err) return reject(err);
+            return resolve({ status: '200', message: 'Member small group added successfully' });
+        });
+    });
+};
+
+
 memberSmallGroupsObj.deleteMemberSmallGroup = (memberSmallGroupId) => {
     return new Promise((resolve, reject) => {
         pool.query('DELETE FROM membersmallgroups WHERE MemberSmallGroupID = ?', [memberSmallGroupId], (err, results) => {
@@ -51,5 +114,14 @@ memberSmallGroupsObj.deleteMemberSmallGroup = (memberSmallGroupId) => {
         });
     });
 };
+
+function getCurrentDate() {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
+  }
 
 module.exports = memberSmallGroupsObj;

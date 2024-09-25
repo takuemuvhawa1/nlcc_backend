@@ -34,6 +34,58 @@ memberMinistryRouter.get('/:id', async (req, res) => {
     }
 });
 
+// Request to Leave Ministry
+memberMinistryRouter.put('/reqleave/:memberID/:ministryID', async (req, res) => {
+    try {
+        const id = req.params.memberID; 
+        const ministryID = req.params.ministryID; 
+        const result = await memberMinistriesDbOperations.updateMemberMinistryReqLeave(id, ministryID);
+        res.json(result);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+// Approve Member Ministry
+memberMinistryRouter.put('/approve/:memberID/:ministryID', async (req, res) => {
+    try {
+        const id = req.params.memberID; 
+        const ministryID = req.params.ministryID; 
+        const result = await memberMinistriesDbOperations.updateApproveMemberMinistry(id, ministryID);
+        res.json(result);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+// Exit Member Ministry
+memberMinistryRouter.put('/leave/:memberID/:ministryID', async (req, res) => {
+    try {
+        const id = req.params.memberID; 
+        const ministryID = req.params.ministryID; 
+        const result = await memberMinistriesDbOperations.updateApproveLeaveMemberMinistry(id, ministryID);
+        res.json(result);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+// Request to Join Ministry
+memberMinistryRouter.post('/join', async (req, res) => {
+    try {
+        const postedValues = req.body;
+        const results = await memberMinistriesDbOperations.postMemberMinistryReqJoin(postedValues.MemberID, postedValues.MinistryID);
+        res.json(results);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+
 memberMinistryRouter.put('/:id', async (req, res) => {
     try {
         const id = req.params.id;

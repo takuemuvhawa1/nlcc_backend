@@ -46,6 +46,57 @@ memberSmallGroupsRouter.put('/:id', async (req, res) => {
     }
 });
 
+//Request to leave
+memberSmallGroupsRouter.put('/reqleave/:id/:SmallGroupID', async (req, res) => {
+    try {
+        const id = req.params.id; 
+        const SmallGroupID = req.params.SmallGroupID; 
+        const result = await memberSmallGroupsDbOperations.updateLeaveMemberSmallGroup(id, SmallGroupID);
+        res.json(result);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+//Approve Member
+memberSmallGroupsRouter.put('/approve/:id/:SmallGroupID', async (req, res) => {
+    try {
+        const id = req.params.id; 
+        const SmallGroupID = req.params.SmallGroupID; 
+        const result = await memberSmallGroupsDbOperations.updateApproveMemberSmallGroup(id, SmallGroupID);
+        res.json(result);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+//Exit Member
+memberSmallGroupsRouter.put('/leave/:id/:SmallGroupID', async (req, res) => {
+    try {
+        const id = req.params.id; 
+        const SmallGroupID = req.params.SmallGroupID; 
+        const result = await memberSmallGroupsDbOperations.updateApproveLeaveMemberSmallGroup(id, SmallGroupID);
+        res.json(result);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+//Request to Join Cell
+memberSmallGroupsRouter.post('/joincell', async (req, res) => {
+    try {
+        const postedValues = req.body;
+        const results = await memberSmallGroupsDbOperations.postMemberSmallGroupReqJoin(postedValues.MemberID, postedValues.SmallGroupID);
+        res.json(results);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+
 memberSmallGroupsRouter.delete('/:id', async (req, res) => {
     try {
         const id = req.params.id;

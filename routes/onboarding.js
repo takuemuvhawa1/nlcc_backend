@@ -78,7 +78,7 @@ onBoardingRouter.post('/signin', async (req, res) => {
                 member: result.member,
                 token
             });
-            return; // Ensure to exit after sending response
+            return; 
         }
 
         res.status(result.status).json(result);

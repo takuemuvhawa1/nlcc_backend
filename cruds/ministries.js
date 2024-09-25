@@ -113,9 +113,55 @@ ministriesObj.getMembersByMinistryId = (ministryId) => {
             JOIN 
                 memberministries mm ON mem.MemberID = mm.MemberID 
             WHERE 
-                mm.MinistryID = ?`;
+                (mm.MinistryID = ? AND mm.request = "Approved")`;
 
         pool.query(query, [ministryId], (err, results) => {
+            if (err) return reject(err);
+            return resolve(results);
+        });
+    });
+};
+
+//Join Requests
+ministriesObj.getMembersByMinistryJoinReq = (ministryId) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT 
+                mem.MemberID, 
+                mem.Name, 
+                mem.Surname, 
+                mem.Phone 
+            FROM 
+                members mem 
+            JOIN 
+                memberministries mm ON mem.MemberID = mm.MemberID 
+            WHERE 
+                (mm.MinistryID = ? AND mm.request IS NULL)`;
+
+        pool.query(query, [ministryId, null], (err, results) => {
+            if (err) return reject(err);
+            return resolve(results);
+        });
+    });
+};
+
+//Leave Requests
+ministriesObj.getMembersByMinistryLeaveReq = (ministryId) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT 
+                mem.MemberID, 
+                mem.Name, 
+                mem.Surname, 
+                mem.Phone 
+            FROM 
+                members mem 
+            JOIN 
+                memberministries mm ON mem.MemberID = mm.MemberID 
+            WHERE 
+                (mm.MinistryID = ? AND mm.request = "Leave")`;
+
+        pool.query(query, [ministryId, null], (err, results) => {
             if (err) return reject(err);
             return resolve(results);
         });

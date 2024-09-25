@@ -3,10 +3,10 @@ const pool = require('./poolfile');
 
 let memberMinistriesObj = {};
 
-memberMinistriesObj.postMemberMinistry = (MemberID, MinistryID, StartDate, EndDate) => {
+memberMinistriesObj.postMemberMinistry = (MemberID, MinistryID, StartDate, EndDate, Request) => {
     return new Promise((resolve, reject) => {
-        pool.query('INSERT INTO memberministries(MemberID, MinistryID, StartDate, EndDate) VALUES (?, ?, ?, ?)', 
-        [MemberID, MinistryID, StartDate, EndDate], 
+        pool.query('INSERT INTO memberministries(MemberID, MinistryID, StartDate, EndDate, request) VALUES (?, ?, ?, ?, ?)', 
+        [MemberID, MinistryID, StartDate, EndDate, Request], 
         (err, result) => {
             if (err) return reject(err);
             return resolve({ status: '200', message: 'Member ministry added successfully' });
@@ -32,10 +32,10 @@ memberMinistriesObj.getMemberMinistryById = (memberMinistryId) => {
     });
 };
 
-memberMinistriesObj.updateMemberMinistry = (MemberMinistryID, MemberID, MinistryID, StartDate, EndDate) => {
+memberMinistriesObj.updateMemberMinistry = (MemberMinistryID, MemberID, MinistryID, StartDate, EndDate, Request) => {
     return new Promise((resolve, reject) => {
-        pool.query('UPDATE memberministries SET MemberID = ?, MinistryID = ?, StartDate = ?, EndDate = ? WHERE MemberMinistryID = ?',
-            [MemberID, MinistryID, StartDate, EndDate, MemberMinistryID], 
+        pool.query('UPDATE memberministries SET MemberID = ?, MinistryID = ?, StartDate = ?, EndDate = ?, request = ? WHERE MemberMinistryID = ?',
+            [MemberID, MinistryID, StartDate, EndDate, Request, MemberMinistryID], 
             (err, result) => {
                 if (err) return reject(err);
                 return resolve({ status: '200', message: 'Member ministry updated successfully' });

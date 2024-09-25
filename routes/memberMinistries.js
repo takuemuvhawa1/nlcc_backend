@@ -5,7 +5,7 @@ const memberMinistriesDbOperations = require('../cruds/memberMinistries');
 memberMinistryRouter.post('/', async (req, res) => {
     try {
         const postedValues = req.body;
-        const results = await memberMinistriesDbOperations.postMemberMinistry(postedValues.MemberID, postedValues.MinistryID, postedValues.StartDate, postedValues.EndDate);
+        const results = await memberMinistriesDbOperations.postMemberMinistry(postedValues.MemberID, postedValues.MinistryID, postedValues.StartDate, postedValues.EndDate, postedValues.Request);
         res.json(results);
     } catch (e) {
         console.log(e);
@@ -38,7 +38,7 @@ memberMinistryRouter.put('/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const updatedValues = req.body;
-        const result = await memberMinistriesDbOperations.updateMemberMinistry(id, updatedValues.MemberID, updatedValues.MinistryID, updatedValues.StartDate, updatedValues.EndDate);
+        const result = await memberMinistriesDbOperations.updateMemberMinistry(id, updatedValues.MemberID, updatedValues.MinistryID, updatedValues.StartDate, updatedValues.EndDate, updatedValues.Request);
         res.json(result);
     } catch (e) {
         console.log(e);

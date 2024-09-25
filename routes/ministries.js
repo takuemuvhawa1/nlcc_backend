@@ -79,6 +79,38 @@ ministryRouter.get('/ministry-leaders', async (req, res) => {
 //     }
 // });
 
+// ministryRouter.get('/ministry-leaders/:memberId', async (req, res) => {
+//     const memberId = req.params.memberId; 
+//     try {
+//         const results = await ministriesDbOperations.getMinistriesJoin2(memberId);
+//         const response = await Promise.all(results.map(async ministry => {
+//             const leaderStatus = ministry.LeaderID == memberId; 
+//             let members = [];
+
+//             // If the user is the leader, fetch all members for this ministry
+//             if (leaderStatus) {
+//                 members = await ministriesDbOperations.getMembersByMinistryId(ministry.MinistryID);
+//             }
+
+//             return {
+//                 id: ministry.MinistryID,
+//                 name: ministry.MinistryName,
+//                 description: ministry.Description,
+//                 leaderID: ministry.LeaderID,
+//                 admin: `${ministry.LeaderName} ${ministry.LeaderSurname}`,
+//                 adminphone: ministry.Phoneno,
+//                 joined: ministry.MemberID ? true : false, 
+//                 leaderStatus: leaderStatus,
+//                 members: members 
+//             };
+//         }));
+//         res.json(response);
+//     } catch (e) {
+//         console.log(e);
+//         res.sendStatus(500);
+//     }
+// });
+
 ministryRouter.get('/ministry-leaders/:memberId', async (req, res) => {
     const memberId = req.params.memberId; 
     try {
@@ -86,10 +118,18 @@ ministryRouter.get('/ministry-leaders/:memberId', async (req, res) => {
         const response = await Promise.all(results.map(async ministry => {
             const leaderStatus = ministry.LeaderID == memberId; 
             let members = [];
+            let joinReq = [];
+            let LeaveReq = [];
 
             // If the user is the leader, fetch all members for this ministry
             if (leaderStatus) {
                 members = await ministriesDbOperations.getMembersByMinistryId(ministry.MinistryID);
+            }
+            if (leaderStatus) {
+                joinReq = await ministriesDbOperations.getMembersByMinistryJoinReq(ministry.MinistryID);
+            }
+            if (leaderStatus) {
+                LeaveReq = await ministriesDbOperations.getMembersByMinistryLeaveReq(ministry.MinistryID);
             }
 
             return {
@@ -101,15 +141,24 @@ ministryRouter.get('/ministry-leaders/:memberId', async (req, res) => {
                 adminphone: ministry.Phoneno,
                 joined: ministry.MemberID ? true : false, 
                 leaderStatus: leaderStatus,
-                members: members 
+                members : members.length,
+                members: members,
+                joinrequesting : joinReq.length,
+                requestingdata: joinReq,
+                leaverequesting: LeaveReq.length,
+                leavingdata: LeaveReq
             };
         }));
-        res.json(response);
+
+        // Filter the response to include only ministries where leaderStatus is true
+        const filteredResponse = response.filter(ministry => ministry.leaderStatus);
+        res.json(filteredResponse);
     } catch (e) {
         console.log(e);
         res.sendStatus(500);
     }
 });
+
 
 ministryRouter.get('/ministry/:memberId', async (req, res) => {
     const memberId = req.params.memberId; 

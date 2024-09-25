@@ -129,7 +129,7 @@ crudsObj.getCellGroupsJoin = (memberId) => {
            LEFT JOIN   
            membersmallgroups mg ON sg.SmallGroupID = mg.SmallGroupID 
            WHERE 
-           mg.MemberID = 101`;
+           mg.MemberID = ?`;
 
         pool.query(query, [memberId], (err, results) => {
             if (err) return reject(err);

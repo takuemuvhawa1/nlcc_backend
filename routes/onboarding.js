@@ -63,10 +63,7 @@ onBoardingRouter.post('/signin', async (req, res) => {
             const memberId = result.member.MemberID; 
             const ministries = await onBoardingDbOperations.getMinistriesJoin2(memberId);
             result.member.ministries = ministries; 
-        }
 
-        if (result.status === '200') {
-            const memberId = result.member.MemberID; 
             const cellgroups = await onBoardingDbOperations.getCellGroupsJoin(memberId); 
             result.member.cellgroups = cellgroups; 
 
@@ -75,11 +72,12 @@ onBoardingRouter.post('/signin', async (req, res) => {
             console.log('TOKEN: ', token);
     
             // Send user data and token in one response
-            res.json({ result: result, token });
+            res.status(result.status).json({
+                member: result.member,
+                token
+            });
+            return; 
         }
-
-
-
 
         res.status(result.status).json(result);
     } catch (e) {

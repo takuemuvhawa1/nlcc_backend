@@ -63,6 +63,44 @@ crudsObj.setPassword = async (email, otp, password) => {
     });
 };
 
+
+crudsObj.resetPassword = async (email, oldPassword, newPassword) => {
+    return new Promise((resolve, reject) => {
+        // Check if the email exists and the old password is valid
+        pool.query('SELECT * FROM members WHERE email = ? AND Password = ?', [email, oldPassword], async (err, results) => {
+            if (err) {
+                return reject(err);
+            }
+            if (results.length === 0) {
+                return resolve({ status: '401', message: 'Invalid email or password' });
+            }
+
+            // Update the password
+            pool.query('UPDATE members SET Password = ? WHERE email = ?', [newPassword, email], async (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+
+                // Clear OTP if applicable
+                pool.query('UPDATE members SET Otp = ? WHERE email = ?', [null, email]);
+
+                // Fetch updated member info
+                pool.query('SELECT * FROM members WHERE email = ?', [email], async (err, results) => {
+                    if (err) {
+                        return reject(err);
+                    }
+
+                    const member = results[0];
+                    const { Password, ...memberData } = member;
+
+                    return resolve({ status: '200', message: 'Password reset successfully', member: memberData });
+                });
+            });
+        });
+    });
+};
+
+
 crudsObj.resendOtp = async (email) => {
     return new Promise((resolve, reject) => {
         pool.query('SELECT Otp FROM members WHERE email = ?', [email], async (err, results) => {

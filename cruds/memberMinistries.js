@@ -5,12 +5,12 @@ let memberMinistriesObj = {};
 
 memberMinistriesObj.postMemberMinistry = (MemberID, MinistryID, StartDate, EndDate, Request) => {
     return new Promise((resolve, reject) => {
-        pool.query('INSERT INTO memberministries(MemberID, MinistryID, StartDate, EndDate, request) VALUES (?, ?, ?, ?, ?)', 
-        [MemberID, MinistryID, StartDate, EndDate, Request], 
-        (err, result) => {
-            if (err) return reject(err);
-            return resolve({ status: '200', message: 'Member ministry added successfully' });
-        });
+        pool.query('INSERT INTO memberministries(MemberID, MinistryID, StartDate, EndDate, request) VALUES (?, ?, ?, ?, ?)',
+            [MemberID, MinistryID, StartDate, EndDate, Request],
+            (err, result) => {
+                if (err) return reject(err);
+                return resolve({ status: '200', message: 'Member ministry added successfully' });
+            });
     });
 };
 
@@ -20,6 +20,19 @@ memberMinistriesObj.getMemberMinistries = () => {
             if (err) return reject(err);
             return resolve(results);
         });
+    });
+};
+
+memberMinistriesObj.getMemberMinistriesJoin = (id) => {
+    return new Promise((resolve, reject) => {
+        pool.query(
+            `SELECT mm.MemberMinistryID, m.MemberID, m.Name, m.Surname, m.Email, m.Phone, m.Address, m.Zone FROM memberministries mm
+            JOIN members m ON m.MemberID = mm.MemberID WHERE mm.MinistryID = ? AND m.MembershipStatus != 'Inactive'
+            AND m.MembershipStatus != 'Visitor' AND mm.request = 'Approved'`
+            ,[id],(err, results) => {
+                if (err) return reject(err);
+                return resolve(results);
+            });
     });
 };
 
@@ -36,7 +49,7 @@ memberMinistriesObj.getMemberMinistryById = (memberMinistryId) => {
 memberMinistriesObj.updateMemberMinistryReqLeave = (MemberID, MinistryID) => {
     return new Promise((resolve, reject) => {
         pool.query('UPDATE memberministries SET Request = "Leave" WHERE MemberID = ? AND MinistryID = ?',
-            [MemberID, MinistryID], 
+            [MemberID, MinistryID],
             (err, result) => {
                 if (err) return reject(err);
                 if (result.affectedRows > 0) {
@@ -52,7 +65,7 @@ memberMinistriesObj.updateMemberMinistryReqLeave = (MemberID, MinistryID) => {
 memberMinistriesObj.updateApproveMemberMinistry = (MemberID, MinistryID) => {
     return new Promise((resolve, reject) => {
         pool.query('UPDATE memberministries SET Request = "Approved" WHERE MemberID = ? AND MinistryID = ?',
-            [MemberID, MinistryID], 
+            [MemberID, MinistryID],
             (err, result) => {
                 if (err) return reject(err);
                 if (result.affectedRows > 0) {
@@ -68,7 +81,7 @@ memberMinistriesObj.updateApproveMemberMinistry = (MemberID, MinistryID) => {
 memberMinistriesObj.updateApproveLeaveMemberMinistry = (MemberID, MinistryID) => {
     return new Promise((resolve, reject) => {
         pool.query('UPDATE memberministries SET Request = "Left" WHERE MemberID = ? AND MinistryID = ?',
-            [MemberID, MinistryID], 
+            [MemberID, MinistryID],
             (err, result) => {
                 if (err) return reject(err);
                 if (result.affectedRows > 0) {
@@ -85,12 +98,12 @@ memberMinistriesObj.postMemberMinistryReqJoin = (MemberID, MinistryID) => {
     return new Promise((resolve, reject) => {
         const currentDate = getCurrentDate();
 
-        pool.query('INSERT INTO memberministries(MemberID, MinistryID, StartDate, EndDate, Request) VALUES (?, ?, ?, ?, ?)', 
-        [MemberID, MinistryID, currentDate, currentDate, null], 
-        (err, result) => {
-            if (err) return reject(err);
-            return resolve({ status: '200', message: 'Member ministry added successfully' });
-        });
+        pool.query('INSERT INTO memberministries(MemberID, MinistryID, StartDate, EndDate, Request) VALUES (?, ?, ?, ?, ?)',
+            [MemberID, MinistryID, currentDate, currentDate, null],
+            (err, result) => {
+                if (err) return reject(err);
+                return resolve({ status: '200', message: 'Member ministry added successfully' });
+            });
     });
 };
 
@@ -98,11 +111,20 @@ memberMinistriesObj.postMemberMinistryReqJoin = (MemberID, MinistryID) => {
 memberMinistriesObj.updateMemberMinistry = (MemberMinistryID, MemberID, MinistryID, StartDate, EndDate, Request) => {
     return new Promise((resolve, reject) => {
         pool.query('UPDATE memberministries SET MemberID = ?, MinistryID = ?, StartDate = ?, EndDate = ?, request = ? WHERE MemberMinistryID = ?',
-            [MemberID, MinistryID, StartDate, EndDate, Request, MemberMinistryID], 
+            [MemberID, MinistryID, StartDate, EndDate, Request, MemberMinistryID],
             (err, result) => {
                 if (err) return reject(err);
                 return resolve({ status: '200', message: 'Member ministry updated successfully' });
             });
+    });
+};
+
+memberMinistriesObj.deleteMemberMinistryJoin = (memberId, ministryId) => {
+    return new Promise((resolve, reject) => {
+        pool.query('DELETE FROM memberministries WHERE MemberID = ? AND MinistryID = ?', [memberId, ministryId], (err, results) => {
+            if (err) return reject(err);
+            return resolve({ status: '200', message: 'Member ministry deleted successfully' });
+        });
     });
 };
 
@@ -120,9 +142,9 @@ function getCurrentDate() {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-    
+
     return `${year}-${month}-${day}`;
-  }
+}
 
 
-module.exports = memberMinistriesObj;
+module.exports = memberMinistriesObj; 

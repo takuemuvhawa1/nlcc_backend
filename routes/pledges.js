@@ -6,7 +6,7 @@ const pledgesDbOperations = require('../cruds/pledges');
 pledgeRouter.post('/', async (req, res) => {
     try {
         const postedValues = req.body;
-        const results = await pledgesDbOperations.postPledge(postedValues.MemberID, postedValues.StartDate, postedValues.EndDate, postedValues.Amount, postedValues.Frequency, postedValues.ProjectID);
+        const results = await pledgesDbOperations.postPledge(postedValues.MemberID, postedValues.StartDate, postedValues.EndDate, postedValues.Amount, postedValues.ProjectID);
         res.json(results);
     } catch (e) {
         console.log(e);
@@ -17,6 +17,17 @@ pledgeRouter.post('/', async (req, res) => {
 pledgeRouter.get('/', async (req, res) => {
     try {
         const results = await pledgesDbOperations.getPledges();
+        res.json(results);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+pledgeRouter.get('/all/:status', async (req, res) => {
+    try {
+        const status = req.params.status;
+        const results = await pledgesDbOperations.getPledgeByStatus(status);
         res.json(results);
     } catch (e) {
         console.log(e);
@@ -39,7 +50,7 @@ pledgeRouter.put('/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const updatedValues = req.body;
-        const result = await pledgesDbOperations.updatePledge(id, updatedValues.MemberID, updatedValues.StartDate, updatedValues.EndDate, updatedValues.Amount, updatedValues.Frequency, updatedValues.ProjectID);
+        const result = await pledgesDbOperations.updatePledge(id, updatedValues.MemberID, updatedValues.StartDate, updatedValues.EndDate, updatedValues.Amount, updatedValues.ProjectID, updatedValues.Status);
         res.json(result);
     } catch (e) {
         console.log(e);

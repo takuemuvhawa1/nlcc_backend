@@ -3,7 +3,11 @@ require('dotenv').config();
 const cors = require('cors');
 const https = require('https');
 
+const membersDbOperations = require('./cruds/member'); 
+
 const authenticateToken = require('./utilities/authenticateToken');
+
+const pool = require('./cruds/poolapi');
 
 const multer = require('multer');
 const axios = require('axios');
@@ -41,6 +45,7 @@ const eventTasksRouter = require('./routes/events_tasks');
 const notificationsRouter = require('./routes/notifications');
 const sermonsRouter = require('./routes/sermons');
 const memberMinistryRouter = require('./routes/memberMinistries');
+const volunteerTasksRouter = require('./routes/volunteer_tasks');
 
 const app = express();
 app.use(express.json());
@@ -57,6 +62,7 @@ app.use('/pledges', pledgeRouter);
 app.use('/eventreg', eventRegistrationRouter);
 app.use('/events', eventRouter);
 app.use('/events-tasks', eventTasksRouter);
+app.use('/volunteer-tasks', volunteerTasksRouter);
 app.use('/volunteeropp', volunteerOpportunityRouter);
 app.use('/volunteersignup', volunteerSignupRouter);
 app.use('/volattendance', volunteerSignupAttendanceRouter);
@@ -99,6 +105,33 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
   res.status(200).send(`File uploaded successfully. Filename: ${uploadedFilename}`);
 });
+
+//Upload profile pic
+app.post('/upload/:id', upload.single('file'), async (req, res) => {
+  if (!req.file) {
+      return res.status(400).send('No file uploaded.');
+  }
+
+  const uploadedFilename = req.file.filename;
+  console.log('File uploaded:', uploadedFilename);
+
+  try {
+      const id = req.params.id;
+      const updatedValues = { ProfilePicture: `${pool}/file/`+ uploadedFilename }; 
+      // console.log("id: ", id);
+      // console.log("ProfilePicture: ", uploadedFilename);
+      const result = await membersDbOperations.updateMemberProfilePic(id, updatedValues.ProfilePicture);
+
+      res.status(200).json({
+          message: `File uploaded successfully. Filename: ${uploadedFilename}`,
+          result: result
+      });
+  } catch (e) {
+      console.log(e);
+      res.sendStatus(500);
+  }
+});
+
 // Set up a route for file retrieval
 app.get('/file/:filename', (req, res) => {
   const filename = req.params.filename;
@@ -116,7 +149,7 @@ app.get('/file/:filename', (req, res) => {
 // Endpoint for downloading files
 app.get('/download/:filename', (req, res) => {
   const filename = req.params.filename;
-  const filePath = path.join(__dirname, 'uploads', filename); // Adjust the path as needed
+  const filePath = path.join(__dirname, 'uploads', filename); 
 
   res.download(filePath, (err) => {
     if (err) {

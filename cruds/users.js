@@ -4,10 +4,10 @@ const axios = require('axios');
 
 let crudsObj = {};
 
-crudsObj.postUser = (name, surname, email, password, role, phone, address) => {
+crudsObj.postUser = (name, surname, email, role, phone, address) => {
     return new Promise((resolve, reject) => {
-        pool.query('INSERT INTO users (user_name, surname, email, user_password, role, phone, address) VALUES (?, ?, ?, ?, ?, ?, ?)', 
-            [name, surname, email, password, role, phone, address], (err, result) => {
+        pool.query('INSERT INTO users (user_name, surname, email, role, phone, address) VALUES (?, ?, ?, ?, ?, ?)',
+            [name, surname, email, role, phone, address], (err, result) => {
                 if (err) {
                     return reject(err);
                 }
@@ -15,6 +15,35 @@ crudsObj.postUser = (name, surname, email, password, role, phone, address) => {
             });
     });
 };
+
+crudsObj.resetPassword = async (email, oldPassword, newPassword) => {
+    return new Promise((resolve, reject) => {
+
+        console.log(email)
+        console.log(oldPassword)
+
+        // Check if the email exists and the old password is valid
+        pool.query('SELECT * FROM users WHERE email = ? AND user_password = ?', [email, oldPassword], async (err, results) => {
+            if (err) {
+                return reject(err);
+            }
+            if (results.length === 0) {
+                return resolve({ status: '401', message: 'Invalid email or password' });
+            }
+
+            // Update the password
+            pool.query('UPDATE users SET user_password = ? WHERE email = ?', [newPassword, email], async (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+
+                return resolve({ status: '200', message: 'Password reset successfully'});
+
+            });
+        });
+    });
+};
+
 
 crudsObj.authenticateUser = async (email, password) => {
     return new Promise((resolve, reject) => {

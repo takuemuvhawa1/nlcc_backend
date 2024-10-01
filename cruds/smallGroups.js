@@ -9,7 +9,10 @@ smallGroupsObj.postSmallGroup = (Name, Description, CalendarID, Location) => {
         [Name, Description, CalendarID, Location], 
         (err, result) => {
             if (err) return reject(err);
-            return resolve({ status: '200', message: 'Small group added successfully' });
+
+            const SmallGroupID = result.insertId;
+
+            return resolve({ status: '200', message: 'Small group added successfully', SmallGroupID });
         });
     });
 };
@@ -160,12 +163,16 @@ smallGroupsObj.getSmallGroupById = (smallGroupId) => {
     });
 };
 
-smallGroupsObj.updateSmallGroup = (SmallGroupID, Name, Description, CalendarID, Location) => {
+smallGroupsObj.updateSmallGroup = (SmallGroupID, Name, Description, CalendarID, Location, LeaderID) => {
     return new Promise((resolve, reject) => {
         pool.query('UPDATE smallgroups SET Name = ?, Description = ?, CalendarID = ?, Location = ? WHERE SmallGroupID = ?',
             [Name, Description, CalendarID, Location, SmallGroupID], 
             (err, result) => {
                 if (err) return reject(err);
+
+                pool.query('UPDATE smallgroupleaders SET LeaderID = ? WHERE SmallGroupID = ?',
+                    [LeaderID, SmallGroupID] )
+
                 return resolve({ status: '200', message: 'Small group updated successfully' });
             });
     });

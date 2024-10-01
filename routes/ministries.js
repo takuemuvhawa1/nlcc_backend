@@ -202,7 +202,7 @@ ministryRouter.put('/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const updatedValues = req.body;
-        const result = await ministriesDbOperations.updateMinistry(id, updatedValues.Name, updatedValues.Description, updatedValues.CalendarID);
+        const result = await ministriesDbOperations.updateMinistry(id, updatedValues.Name, updatedValues.Description, updatedValues.CalendarID, updatedValues.LeaderID);
         res.json(result);
     } catch (e) {
         console.log(e);

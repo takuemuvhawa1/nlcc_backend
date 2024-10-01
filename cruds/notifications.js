@@ -5,7 +5,7 @@ const notificationsObj = {};
 
 notificationsObj.postNotification = (header, content, date, time, MemberID) => {
     return new Promise((resolve, reject) => {
-        pool.query('INSERT INTO notifications(header, content, date, time, MemberID) VALUES (?, ?, ?, ?)', 
+        pool.query('INSERT INTO notifications(header, content, date, time, MemberID) VALUES (?, ?, ?, ?, ?)', 
         [header, content, date, time, MemberID], 
         (err, result) => {
             if (err) return reject(err);
@@ -17,8 +17,8 @@ notificationsObj.postNotification = (header, content, date, time, MemberID) => {
 notificationsObj.getNotifications = () => {
     return new Promise((resolve, reject) => {
         pool.query(`SELECT n.*, m.Name AS senderName, m.Surname AS senderSurname
-FROM notifications n
-JOIN members m ON n.MemberID = m.MemberID`, (err, results) => {
+                    FROM notifications n
+                    JOIN members m ON n.MemberID = m.MemberID`, (err, results) => {
             if (err) return reject(err);
             return resolve(results);
         });

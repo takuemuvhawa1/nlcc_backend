@@ -124,7 +124,7 @@ smallGroupsRouter.put('/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const updatedValues = req.body;
-        const result = await smallGroupsDbOperations.updateSmallGroup(id, updatedValues.Name, updatedValues.Description, updatedValues.CalendarID, updatedValues.Location);
+        const result = await smallGroupsDbOperations.updateSmallGroup(id, updatedValues.Name, updatedValues.Description, updatedValues.CalendarID, updatedValues.Location, updatedValues.LeaderID);
         res.json(result);
     } catch (e) {
         console.log(e);

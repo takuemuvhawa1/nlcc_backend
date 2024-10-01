@@ -10,12 +10,23 @@ memberMinistryRouter.post('/', async (req, res) => {
     } catch (e) {
         console.log(e);
         res.sendStatus(500);
-    }
-});
+    }   
+}); 
 
 memberMinistryRouter.get('/', async (req, res) => {
     try {
         const results = await memberMinistriesDbOperations.getMemberMinistries();
+        res.json(results);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+memberMinistryRouter.get('/join/:id', async (req, res) => {
+    try {
+        const id = req.params.id
+        const results = await memberMinistriesDbOperations.getMemberMinistriesJoin(id);
         res.json(results);
     } catch (e) {
         console.log(e);
@@ -98,6 +109,17 @@ memberMinistryRouter.put('/:id', async (req, res) => {
     }
 });
 
+memberMinistryRouter.delete('/:memberId/:ministryId', async (req, res) => {
+    try {
+        const memberId = req.params.memberId;
+        const ministryId = req.params.ministryId;
+        const result = await memberMinistriesDbOperations.deleteMemberMinistryJoin(memberId, ministryId);
+        res.json(result);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
 memberMinistryRouter.delete('/:id', async (req, res) => {
     try {
         const id = req.params.id;

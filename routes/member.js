@@ -23,6 +23,17 @@ memberRouter.get('/', async (req, res) => {
     }
 });
 
+memberRouter.get('/all/:status', async (req, res) => {
+    try {
+        const status = req.params.status;
+        const results = await membersDbOperations.getMembersByStatus(status);
+        res.json(results);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
 memberRouter.get('/:id', async (req, res) => {
     try {
         const id = req.params.id;
@@ -39,6 +50,18 @@ memberRouter.put('/:id', async (req, res) => {
         const id = req.params.id;
         const updatedValues = req.body;
         const result = await membersDbOperations.updateMember(id, updatedValues.Name, updatedValues.Surname, updatedValues.Email, updatedValues.Phone, updatedValues.Address, updatedValues.City, updatedValues.Country, updatedValues.MembershipStatus, updatedValues.ProfilePicture, updatedValues.Gender, updatedValues.Suburb, updatedValues.Zone, updatedValues.Password);
+        res.json(result);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+memberRouter.put('/profilepic/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const updatedValues = req.body;
+        const result = await membersDbOperations.updateMember(id, updatedValues.ProfilePicture);
         res.json(result);
     } catch (e) {
         console.log(e);

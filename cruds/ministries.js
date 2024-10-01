@@ -178,12 +178,16 @@ ministriesObj.getMinistryById = (ministryId) => {
     });
 };
 
-ministriesObj.updateMinistry = (MinistryID, Name, Description, CalendarID) => {
+ministriesObj.updateMinistry = (MinistryID, Name, Description, CalendarID, LeaderID) => {
     return new Promise((resolve, reject) => {
         pool.query('UPDATE ministries SET Name = ?, Description = ?, CalendarID = ? WHERE MinistryID = ?',
             [Name, Description, CalendarID, MinistryID], 
             (err, result) => {
                 if (err) return reject(err);
+
+                pool.query('UPDATE ministryleaders SET LeaderID = ? WHERE MinistryID = ?',
+                    [LeaderID, MinistryID] )
+
                 return resolve({ status: '200', message: 'Ministry updated successfully' });
             });
     });

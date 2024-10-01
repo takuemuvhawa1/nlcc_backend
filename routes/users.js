@@ -2,12 +2,34 @@ const express = require('express');
 const userRouter = express.Router();
 const usersDbOperations = require('../cruds/users'); 
 
+const crypto = require('crypto');
+
+const { generateToken, verifyToken } = require('../utilities/jwtUtils');
+const authenticateToken = require('../utilities/authenticateToken');
+
 // Create User
 userRouter.post('/', async (req, res) => {
     try {
-        const { name, surname, email, password, role, phone, address } = req.body;
-        let results = await usersDbOperations.postUser(name, surname, email, password, role, phone, address);
+        const { user_name, surname, email, role, phone, address } = req.body;
+        console.log(req.body);
+        let results = await usersDbOperations.postUser(user_name, surname, email, role, phone, address);
         res.json(results);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+userRouter.post('/resetpassword', async (req, res) => {
+    try {
+        const { email, oldPassword, newPassword } = req.body; 
+
+         // Hash the password using MD5
+         const hashedOldPassword = crypto.createHash('md5').update(oldPassword).digest('hex');
+         const hashedPassword = crypto.createHash('md5').update(newPassword).digest('hex');
+
+        let result = await usersDbOperations.resetPassword(email, hashedOldPassword, hashedPassword);
+        res.status(result.status).json(result);
     } catch (e) {
         console.log(e);
         res.sendStatus(500);
@@ -17,18 +39,20 @@ userRouter.post('/', async (req, res) => {
 userRouter.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
-        let result = await usersDbOperations.authenticateUser(email, password);
+        const hashedPassword = crypto.createHash('md5').update(password).digest('hex');
+        let result = await usersDbOperations.authenticateUser(email, hashedPassword);
+
 
         if (!result) {
             return res.status(401).send('Invalid credentials');
         }
 
-         // Generate JWT token
-         const token = generateToken(result); 
-         console.log('TOKEN: ', token);
+        //  // Generate JWT token
+        //  const token = generateToken(result); 
+        //  console.log('TOKEN: ', token);
  
-         // Send user data and token in one response
-         res.json({ result: result, token });
+        //  // Send user data and token in one response
+        //  res.json({ result: result, token });
 
         res.status(result.status).json(result);
     } catch (e) {
@@ -64,8 +88,8 @@ userRouter.get('/:id', async (req, res) => {
 userRouter.put('/:id', async (req, res) => {
     try {
         let id = req.params.id;
-        const { name, surname, email, password, role, phone, address } = req.body;
-        let result = await usersDbOperations.updateUser(id, name, surname, email, password, role, phone, address);
+        const { user_name, surname, email, password, role, phone, address } = req.body;
+        let result = await usersDbOperations.updateUser(id, user_name, surname, email, password, role, phone, address);
         res.json(result);
     } catch (e) {
         console.log(e);

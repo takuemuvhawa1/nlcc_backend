@@ -27,9 +27,9 @@ crudsObj.getMembers = () => {
     });
 };
 
-crudsObj.getMemberById = (memberId) => {
+crudsObj.getMembersByStatus = (status) => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT * FROM members WHERE MemberID = ?', [memberId], (err, results) => {
+        pool.query('SELECT * FROM members WHERE MembershipStatus = ?', [status], (err, results) => {
             if (err) {
                 return reject(err);
             }
@@ -48,11 +48,25 @@ crudsObj.getMemberById = (memberId) => {
         });
     });
 };
+
 
 crudsObj.updateMember = (MemberID, Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, Password) => {
     return new Promise((resolve, reject) => {
         pool.query('UPDATE members SET Name = ?, Surname = ?, Email = ?, Phone = ?, Address = ?, City = ?, Country = ?, MembershipStatus = ?, ProfilePicture = ?, Gender = ?, Suburb = ?, Zone = ?, Password = ? WHERE MemberID = ?',
             [Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, Password, MemberID], 
+            (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve({ status: '200', message: 'Member updated successfully' });
+            });
+    });
+};
+
+crudsObj.updateMemberProfilePic = (MemberID, ProfilePicture) => {
+    return new Promise((resolve, reject) => {
+        pool.query('UPDATE members SET ProfilePicture = ? WHERE MemberID = ?',
+            [ProfilePicture, MemberID], 
             (err, result) => {
                 if (err) {
                     return reject(err);

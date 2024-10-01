@@ -35,7 +35,7 @@ regAttendanceObj.getAttendanceById = (attendanceId) => {
 //Join events
 regAttendanceObj.getAttEvent = () => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT * FROM attendance_reg a JOIN events e ON a.EventID = e.EventID;', (err, results) => {
+        pool.query('SELECT * FROM attendance_reg a JOIN tblevents e ON a.EventID = e.id;', (err, results) => {
             if (err) return reject(err);
             return resolve(results);
         });

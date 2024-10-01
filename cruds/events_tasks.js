@@ -3,10 +3,10 @@ const pool = require('./poolfile');
 
 let eventsObj = {};
 
-eventsObj.postEvent = (type, theme, description, date, time, enddate, endtime) => {
+eventsObj.postEvent = (type, theme, description, location, date, time, enddate, endtime) => {
     return new Promise((resolve, reject) => {
-        pool.query('INSERT INTO tblevents(type, theme, description, date, time, enddate, endtime) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [type, theme, description, date, time, enddate, endtime],
+        pool.query('INSERT INTO tblevents(type, theme, description, location, date, time, enddate, endtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [type, theme, description, location, date, time, enddate, endtime],
             (err, result) => {
                 if (err) return reject(err);
                 return resolve(result); // Return the result to get the insertId
@@ -50,6 +50,17 @@ eventsObj.getVolunteerTasksByEventId = (eventId) => {
             if (err) return reject(err);
             return resolve(results);
         });
+    });
+};
+
+eventsObj.updateEvent = (id, type, theme, description, location, date, time, enddate, endtime) => {
+    return new Promise((resolve, reject) => {
+        pool.query('UPDATE tblevents SET type = ?, theme = ?, description = ?, location = ?, date = ?, time = ?, enddate = ?, endtime = ? WHERE id = ?',
+            [type, theme, description, location, date, time, enddate, endtime, id], 
+            (err, result) => {
+                if (err) return reject(err);
+                return resolve({ status: '200', message: 'Event updated successfully' });
+            });
     });
 };
 

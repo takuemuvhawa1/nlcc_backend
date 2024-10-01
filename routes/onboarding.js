@@ -13,7 +13,7 @@ onBoardingRouter.post('/searchmember', async (req, res) => {
         let result = await onBoardingDbOperations.searchMember(email);
         res.status(result.status).json(result);
     } catch (e) {
-        console.log(e);
+        console.log(e); 
         res.sendStatus(500);
     }
 });
@@ -36,11 +36,11 @@ onBoardingRouter.post('/setpassword', async (req, res) => {
 
 onBoardingRouter.post('/resetpassword', async (req, res) => {
     try {
-        const { email, oldPassword, password } = req.body;
+        const { email, oldPassword, newPassword } = req.body; 
 
          // Hash the password using MD5
          const hashedOldPassword = crypto.createHash('md5').update(oldPassword).digest('hex');
-         const hashedPassword = crypto.createHash('md5').update(password).digest('hex');
+         const hashedPassword = crypto.createHash('md5').update(newPassword).digest('hex');
 
         let result = await onBoardingDbOperations.resetPassword(email, hashedOldPassword, hashedPassword);
         res.status(result.status).json(result);

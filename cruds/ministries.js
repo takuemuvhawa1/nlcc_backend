@@ -83,7 +83,8 @@ ministriesObj.getMinistriesJoin2 = (memberId) => {
                 mem.Name AS LeaderName, 
                 mem.Surname AS LeaderSurname, 
                 mem.Phone AS Phoneno,
-                mm.MemberID
+                mm.MemberID,
+                mm.request
             FROM 
                 ministries m 
             LEFT JOIN 

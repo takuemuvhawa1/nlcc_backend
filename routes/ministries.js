@@ -174,7 +174,8 @@ ministryRouter.get('/ministry/:memberId', async (req, res) => {
                 leaderID: ministry.LeaderID,
                 admin: `${ministry.LeaderName} ${ministry.LeaderSurname}`,
                 adminphone: ministry.Phoneno,
-                joined: ministry.MemberID ? true : false, 
+                request: ministry.request,
+                joined: ministry.request === "Approved" && ministry.MemberID ? true : false, 
                 leaderStatus: leaderStatus,
             };
         }));

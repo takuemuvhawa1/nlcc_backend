@@ -167,7 +167,7 @@ ministryRouter.get('/ministry/:memberId', async (req, res) => {
         const response = await Promise.all(results.map(async ministry => {
             const leaderStatus = ministry.LeaderID == memberId; 
             let joinState = false;
-            if(ministry.request == "Approved" && ministry.MemberID){
+            if(ministry.request === "Approved" && ministry.MemberID){
                 joinState = true;
             }
             return {

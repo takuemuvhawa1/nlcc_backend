@@ -166,7 +166,6 @@ ministryRouter.get('/ministry/:memberId', async (req, res) => {
         const results = await ministriesDbOperations.getMinistriesJoin2(memberId);
         const response = await Promise.all(results.map(async ministry => {
             const leaderStatus = ministry.LeaderID == memberId; 
-
             return {
                 id: ministry.MinistryID,
                 name: ministry.MinistryName,
@@ -175,7 +174,7 @@ ministryRouter.get('/ministry/:memberId', async (req, res) => {
                 admin: `${ministry.LeaderName} ${ministry.LeaderSurname}`,
                 adminphone: ministry.Phoneno,
                 request: ministry.request,
-                joined: ministry.MemberID ? true : false, 
+                joined: (ministry.request === "Approved" && ministry.MemberID) ? true : false, 
                 leaderStatus: leaderStatus,
             };
         }));

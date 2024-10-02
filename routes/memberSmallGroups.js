@@ -34,6 +34,17 @@ memberSmallGroupsRouter.get('/:id', async (req, res) => {
     }
 });
 
+memberSmallGroupsRouter.get('/join/:id', async (req, res) => {
+    try {
+        const id = req.params.id
+        const results = await memberSmallGroupsDbOperations.getMemberCellGrpsJoin(id);
+        res.json(results);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
 memberSmallGroupsRouter.put('/:id', async (req, res) => {
     try {
         const id = req.params.id;
@@ -49,8 +60,8 @@ memberSmallGroupsRouter.put('/:id', async (req, res) => {
 //Request to leave
 memberSmallGroupsRouter.put('/reqleave/:id/:SmallGroupID', async (req, res) => {
     try {
-        const id = req.params.id; 
-        const SmallGroupID = req.params.SmallGroupID; 
+        const id = req.params.id;
+        const SmallGroupID = req.params.SmallGroupID;
         const result = await memberSmallGroupsDbOperations.updateLeaveMemberSmallGroup(id, SmallGroupID);
         res.json(result);
     } catch (e) {
@@ -61,8 +72,8 @@ memberSmallGroupsRouter.put('/reqleave/:id/:SmallGroupID', async (req, res) => {
 //Approve Member
 memberSmallGroupsRouter.put('/approve/:id/:SmallGroupID', async (req, res) => {
     try {
-        const id = req.params.id; 
-        const SmallGroupID = req.params.SmallGroupID; 
+        const id = req.params.id;
+        const SmallGroupID = req.params.SmallGroupID;
         const result = await memberSmallGroupsDbOperations.updateApproveMemberSmallGroup(id, SmallGroupID);
         res.json(result);
     } catch (e) {
@@ -74,8 +85,8 @@ memberSmallGroupsRouter.put('/approve/:id/:SmallGroupID', async (req, res) => {
 //Exit Member
 memberSmallGroupsRouter.put('/leave/:id/:SmallGroupID', async (req, res) => {
     try {
-        const id = req.params.id; 
-        const SmallGroupID = req.params.SmallGroupID; 
+        const id = req.params.id;
+        const SmallGroupID = req.params.SmallGroupID;
         const result = await memberSmallGroupsDbOperations.updateApproveLeaveMemberSmallGroup(id, SmallGroupID);
         res.json(result);
     } catch (e) {
@@ -101,6 +112,18 @@ memberSmallGroupsRouter.delete('/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const result = await memberSmallGroupsDbOperations.deleteMemberSmallGroup(id);
+        res.json(result);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+memberSmallGroupsRouter.delete('/:id/:cellID', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const cellID = req.params.cellID;
+        const result = await memberSmallGroupsDbOperations.deleteMemberSmallGroup2(id);
         res.json(result);
     } catch (e) {
         console.log(e);

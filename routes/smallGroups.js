@@ -77,6 +77,10 @@ smallGroupsRouter.get('/smallgroups-leaders/:memberId', async (req, res) => {
             let joinReq = [];
             let leaveReq = [];
 
+            let pendingLeaveState = false;
+            let pendingJoinState = false;
+            
+
             // If the user is the leader, fetch all members for this small group
             if (leaderStatus) {
                 members = await smallGroupsDbOperations.getMembersBySmallGroupId(group.SmallGroupID);
@@ -88,6 +92,17 @@ smallGroupsRouter.get('/smallgroups-leaders/:memberId', async (req, res) => {
                 leaveReq = await smallGroupsDbOperations.getMembersBySmallGroupLeaveReq(group.SmallGroupID);
             }
 
+            if(group.request === "Approved" && group.MemberID){
+                joinState = true;
+            }
+            if(group.request === "leave" && group.MemberID){
+                joinState = true;
+                pendingLeaveState = true;
+            }
+            if(group.request === null && group.MemberID){
+                pendingJoinState = true;
+            }
+
             return {
                 id: group.SmallGroupID,
                 name: group.Name,
@@ -97,6 +112,8 @@ smallGroupsRouter.get('/smallgroups-leaders/:memberId', async (req, res) => {
                 adminphone: group.Phoneno,
                 joined: group.MemberID ? true : false, 
                 leaderStatus: leaderStatus,
+                PendingLeave: pendingLeaveState,  //NEW
+                pendingJoin: pendingJoinState,    //NEW
                 Totalembers: members.length,
                 members: members,
                 joinrequesting: joinReq.length,

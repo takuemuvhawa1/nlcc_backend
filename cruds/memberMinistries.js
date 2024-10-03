@@ -80,7 +80,8 @@ memberMinistriesObj.updateApproveMemberMinistry = (MemberID, MinistryID) => {
 // Approve Leave
 memberMinistriesObj.updateApproveLeaveMemberMinistry = (MemberID, MinistryID) => {
     return new Promise((resolve, reject) => {
-        pool.query('UPDATE memberministries SET Request = "Left" WHERE MemberID = ? AND MinistryID = ?',
+        // pool.query('UPDATE memberministries SET Request = "Left" WHERE MemberID = ? AND MinistryID = ?',
+        pool.query('DELETE FROM memberministries WHERE MemberID = ? AND MinistryID = ?',
             [MemberID, MinistryID],
             (err, result) => {
                 if (err) return reject(err);

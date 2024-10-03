@@ -167,8 +167,17 @@ ministryRouter.get('/ministry/:memberId', async (req, res) => {
         const response = await Promise.all(results.map(async ministry => {
             const leaderStatus = ministry.LeaderID == memberId; 
             let joinState = false;
+            let pendingLeaveState = false;
+            let pendingJoinState = false;
             if(ministry.request === "Approved" && ministry.MemberID){
                 joinState = true;
+            }
+            if(ministry.request === "leave" && ministry.MemberID){
+                joinState = true;
+                pendingLeaveState = true;
+            }
+            if(ministry.request === null && ministry.MemberID){
+                pendingJoinState = true;
             }
             return {
                 id: ministry.MinistryID,
@@ -179,6 +188,8 @@ ministryRouter.get('/ministry/:memberId', async (req, res) => {
                 adminphone: ministry.Phoneno,
                 request: ministry.request,
                 joined: joinState, 
+                PendingLeave: pendingLeaveState, 
+                pendingJoin: pendingJoinState, 
                 leaderStatus: leaderStatus,
             };
         }));

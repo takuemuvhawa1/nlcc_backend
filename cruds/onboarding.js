@@ -1,6 +1,7 @@
 require('dotenv').config();
 const pool = require('./poolfile');
 const axios = require('axios');
+const poolapi = require('./poolapi');
 
 let crudsObj = {};
 
@@ -22,6 +23,22 @@ crudsObj.searchMember = async (email) => {
             }
 
             pool.query('UPDATE members SET Otp = ? WHERE email = ?', [randNum, email])
+
+             //Email to send otp
+             const data = {
+                username: member.Name, 
+                user_email: email,
+                otp: randNum
+            };
+
+            try {
+                // Send the OTP email
+                const response = await axios.post(`${poolapi}/mailer/otp`, data);
+                return resolve({ status: '200', message: 'OTP sent successfully', /*emailResponse: response.data*/ });
+            } catch (emailErr) {
+                console.error('Error sending OTP email:', emailErr);
+                return reject({ status: '500', message: 'Failed to send OTP email' });
+            }
 
             // Return user data without the password
             const { ...memberData } = member; // Exclude password from user data
@@ -113,7 +130,23 @@ crudsObj.resendOtp = async (email) => {
             const member = results[0]; // Get the user data from the results
 
             //Email to send otp
-            return resolve({ status: '200', message: 'OTP sent successfully' });
+            const data = {
+                username: member.Name, // Assuming you have a username field
+                user_email: email,
+                otp: member.Otp
+            };
+
+            try {
+                // Send the OTP email
+                const response = await axios.post(`${poolapi}/mailer/otp`, data);
+                return resolve({ status: '200', message: 'OTP sent successfully', /*emailResponse: response.data*/ });
+            } catch (emailErr) {
+                console.error('Error sending OTP email:', emailErr);
+                return reject({ status: '500', message: 'Failed to send OTP email' });
+            }
+
+
+            // return resolve({ status: '200', message: 'OTP sent successfully' });
 
         });
     });

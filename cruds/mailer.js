@@ -6,8 +6,8 @@ const Imap = require('imap');
 const { simpleParser } = require('mailparser');
 
 // Gmail credentials
-const senderEmail = '@gmail.com';
-const senderPassword = ''
+const senderEmail = 'taku1muvhawa@gmail.com';
+const senderPassword = 'atubdnvsgenrueap'
 const subject = 'New Life Covenant';
 const bodyApplicationForm = '';
 
@@ -35,14 +35,14 @@ crudsObj.sendOtpEmail = (username, user_email, otp) => {
         const body = `<h2 style='color: blue;'> New Life Covenant Church  </h2> 
                       <p style='color: #000000; margin-top: 33px;'> 
                       Dear ${username}.</p> 
-                      We are thrilled to welcome you to our church family! <br> 
-                      To help you get started, we've sent you a One-Time <br>
-                      Password (OTP) to securely set your password. <br><br>
+                      We are thrilled to welcome you to our church family! 
+                      To help you get started, we've sent you a <br/> One-Time 
+                      Password (OTP) to securely set your password. <br/><br/>
                       Your OTP is: 
                       <b>${otp}</b>  <br><br>
-                      Please enter this code in the app to complete your registration<br> 
-                      and gain access to all our features, including <br>
-                      event updates, community discussions, and spiritual resources.<br>
+                      Please enter this code in the app to complete your registration
+                      and gain access to all our features, including <br/>
+                      event updates, nlcc ministries, cell groups and spiritual resources.
                       </p>
                       <p style='margin-top: 25px'><br>
                       <b>Blessings</b><br />

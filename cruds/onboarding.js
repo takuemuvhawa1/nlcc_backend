@@ -34,15 +34,18 @@ crudsObj.searchMember = async (email) => {
             try {
                 // Send the OTP email
                 const response = await axios.post(`${poolapi}/mailer/otp`, data);
-                return resolve({ status: '200', message: 'OTP sent successfully', /*emailResponse: response.data*/ });
+                // return resolve({ status: '200', message: 'OTP sent successfully', /*emailResponse: response.data*/ });
+                        // Return user data without the password
+            const { ...memberData } = member; // Exclude password from user data
+            return resolve({ status: '200', message: 'Email found', member: memberData, randNum });
             } catch (emailErr) {
                 console.error('Error sending OTP email:', emailErr);
                 return reject({ status: '500', message: 'Failed to send OTP email' });
             }
 
             // Return user data without the password
-            const { ...memberData } = member; // Exclude password from user data
-            return resolve({ status: '200', message: 'Email found', member: memberData, randNum });
+            // const { ...memberData } = member; // Exclude password from user data
+            // return resolve({ status: '200', message: 'Email found', member: memberData, randNum });
 
         });
     });

@@ -46,6 +46,7 @@ const notificationsRouter = require('./routes/notifications');
 const sermonsRouter = require('./routes/sermons');
 const memberMinistryRouter = require('./routes/memberMinistries');
 const volunteerTasksRouter = require('./routes/volunteer_tasks');
+const prayersRouter = require('./routes/prayers');
 
 const app = express();
 app.use(express.json());
@@ -78,6 +79,7 @@ app.use('/mailer', mailerRouter);
 app.use('/onboarding', onBoardingRouter);
 app.use('/notifications', notificationsRouter);
 app.use('/sermons', sermonsRouter);
+app.use('/prayer-req', prayersRouter);
 
 //FILE UPLOADS
 const storage = multer.diskStorage({
@@ -123,7 +125,7 @@ app.post('/upload/:id', upload.single('file'), async (req, res) => {
       const result = await membersDbOperations.updateMemberProfilePic(id, updatedValues.ProfilePicture);
 
       res.status(200).json({
-          message: `File uploaded successfully. Filename: ${uploadedFilename}`,
+          Filename: `${pool}/file/${uploadedFilename}`,
           result: result
       });
   } catch (e) {

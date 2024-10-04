@@ -120,7 +120,7 @@ crudsObj.resetPassword = async (email, oldPassword, newPassword) => {
 
 crudsObj.resendOtp = async (email) => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT Otp FROM members WHERE email = ?', [email], async (err, results) => {
+        pool.query('SELECT Name, Otp FROM members WHERE email = ?', [email], async (err, results) => {
             if (err) {
                 return reject(err);
             }

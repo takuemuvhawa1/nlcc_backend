@@ -88,4 +88,57 @@ crudsObj.sendOtpEmail = (username, user_email, otp) => {
     });
 };
 
+crudsObj.sendOtpEmailForgotPass = (username, user_email, otp) => {
+    return new Promise(async (resolve, reject) => {
+        const body = `<h2 style='color: blue;'> New Life Covenant Church  </h2> 
+                      <p style='color: #000000; margin-top: 33px;'> 
+                      Dear ${username}.</p> 
+                      Please enter the OTP below to verify your identity and reset you password. <br/><br/>
+                      Your OTP is: 
+                      <b>${otp}</b>  <br><br>
+                      </p>
+                      <p style='margin-top: 25px'><br>
+                      <b>Blessings</b><br />
+                      <b>New Life Covenant Church	</b><br />
+                      https://www.jabulanlcc.org <br /> 
+                      147 Robert Mugabe Rd<br />
+                      Harare, Zimbabwe<br />
+                      </p>`;
+
+        try {
+            // Create a nodemailer transporter using SMTP
+            const transporter = nodemailer.createTransport({
+                host: smtpServer,
+                port: smtpPort,
+                secure: false, 
+                auth: {
+                    user: senderEmail,
+                    pass: senderPassword,
+                },
+                tls: {
+                    rejectUnauthorized: false 
+                }
+            });
+
+            // Create the email options
+            const mailOptions = {
+                from: senderEmail,
+                to: user_email,
+                subject: subject,
+                html: body,
+            };
+
+            // Send the email
+            const info = await transporter.sendMail(mailOptions);
+            console.log('Email sent successfully.');
+            console.log('Info object:', info);
+
+            resolve({ status: '200', message: 'sent successfully' });
+        } catch (error) {
+            console.error('Error sending email:', error);
+            reject(error);
+        }
+    });
+};
+
 module.exports = crudsObj;

@@ -18,6 +18,17 @@ onBoardingRouter.post('/searchmember', async (req, res) => {
     }
 });
 
+onBoardingRouter.post('/forgotPassword', async (req, res) => {
+    try {
+        const { email } = req.body;
+        let result = await onBoardingDbOperations.forgotPassword(email);
+        res.status(result.status).json(result);
+    } catch (e) {
+        console.log(e); 
+        res.sendStatus(500);
+    }
+});
+
 onBoardingRouter.post('/setpassword', async (req, res) => {
     try {
         const { email, otp, password } = req.body;

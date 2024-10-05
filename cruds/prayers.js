@@ -5,7 +5,7 @@ const prayersObj = {};
 
 prayersObj.postPrayer = (MemberID, requestnotes) => {
     return new Promise((resolve, reject) => {
-        pool.query('INSERT INTO prayers(MemberID, requestnotes) VALUES (?, ?, ?)', 
+        pool.query('INSERT INTO prayers(MemberID, requestnotes) VALUES (?, ?)', 
         [MemberID, requestnotes], 
         (err, result) => {
             if (err) return reject(err);

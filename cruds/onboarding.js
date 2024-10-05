@@ -188,6 +188,38 @@ crudsObj.resendOtp = async (email) => {
     });
 };
 
+// Forgot password on forgot password route
+crudsObj.resendOtpForgotPassword = async (email) => {
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT Name, Otp FROM members WHERE email = ?', [email], async (err, results) => {
+            if (err) {
+                return reject(err);
+            }
+            if (results.length === 0) {
+                return resolve({ status: '401', message: 'Email not found' });
+            }
+            const member = results[0]; 
+
+            //Email to send otp
+            const data = {
+                username: member.Name, 
+                user_email: email,
+                otp: member.Otp
+            };
+
+            try {
+                // Send the OTP email
+                const response = await axios.post(`${poolapi}/mailer/forgotpassword`, data);
+                return resolve({ status: '200', message: 'OTP sent successfully'});
+            } catch (emailErr) {
+                console.error('Error sending OTP email:', emailErr);
+                return reject({ status: '500', message: 'Failed to send OTP email' });
+            }
+
+        });
+    });
+};
+
 //Login
 crudsObj.signIn = async (email, password) => {
     return new Promise((resolve, reject) => {

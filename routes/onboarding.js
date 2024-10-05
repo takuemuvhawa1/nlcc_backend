@@ -18,7 +18,7 @@ onBoardingRouter.post('/searchmember', async (req, res) => {
     }
 });
 
-onBoardingRouter.post('/forgotPassword', async (req, res) => {
+onBoardingRouter.post('/forgotpassword', async (req, res) => {
     try {
         const { email } = req.body;
         let result = await onBoardingDbOperations.forgotPassword(email);
@@ -66,6 +66,17 @@ onBoardingRouter.post('/resendotp', async (req, res) => {
     try {
         const { email } = req.body;
         let result = await onBoardingDbOperations.resendOtp(email);
+        res.status(result.status).json(result);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+onBoardingRouter.post('/forgotpassword/resendotp', async (req, res) => {
+    try {
+        const { email } = req.body;
+        let result = await onBoardingDbOperations.resendOtpForgotPassword(email);
         res.status(result.status).json(result);
     } catch (e) {
         console.log(e);

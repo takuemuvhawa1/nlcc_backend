@@ -5,6 +5,7 @@ const https = require('https');
 
 const membersDbOperations = require('./cruds/member'); 
 
+// Auth
 const authenticateToken = require('./utilities/authenticateToken');
 
 const pool = require('./cruds/poolapi');

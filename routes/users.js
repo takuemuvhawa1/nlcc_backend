@@ -93,7 +93,7 @@ userRouter.put('/:id', async (req, res) => {
         res.json(result);
     } catch (e) {
         console.log(e);
-        res.sendStatus(500);
+        res.sendStatus(500); 
     }
 });
 

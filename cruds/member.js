@@ -16,6 +16,19 @@ crudsObj.postMember = (Name, Surname, Email, Phone, Address, City, Country, Memb
     });
 };
 
+crudsObj.postMember = (Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone) => {
+    return new Promise((resolve, reject) => {
+        pool.query('INSERT INTO members(Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+        [Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone], 
+        (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            return resolve({ status: '200', message: 'Member added successfully' });
+        });
+    });
+};
+
 crudsObj.getMembers = () => {
     return new Promise((resolve, reject) => {
         pool.query('SELECT * FROM members', (err, results) => {

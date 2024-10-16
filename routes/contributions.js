@@ -5,7 +5,7 @@ const contributionsDbOperations = require('../cruds/contributions');
 contributionRouter.post('/', async (req, res) => {
     try {
         const postedValues = req.body;
-        const results = await contributionsDbOperations.postContribution(postedValues.MemberID, postedValues.Date, postedValues.Amount, postedValues.Method, postedValues.PledgeID, postedValues.ProjectID);
+        const results = await contributionsDbOperations.postContribution(postedValues.MemberID, postedValues.Date, postedValues.Amount, postedValues.Method, postedValues.PledgeID, postedValues.ProjectID, postedValues.currency);
         res.json(results);
     } catch (e) {
         console.log(e);

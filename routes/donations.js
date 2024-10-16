@@ -6,7 +6,7 @@ const donationsDbOperations = require('../cruds/donations');
 donationsRouter.post('/', async (req, res) => {
     try {
         const postedValues = req.body;
-        const results = await donationsDbOperations.postDonation(postedValues.date, postedValues.item, postedValues.reason);
+        const results = await donationsDbOperations.postDonation(postedValues.date, postedValues.item, postedValues.reason, postedValues.memberId);
         res.json(results);
     } catch (e) {
         console.log(e);
@@ -37,12 +37,24 @@ donationsRouter.get('/:id', async (req, res) => {
     }
 });
 
+// Get donation by member ID
+donationsRouter.get('/member/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const result = await donationsDbOperations.getDonationByMemberId(id);
+        res.json(result);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
 // Update donation by ID
 donationsRouter.put('/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const updatedValues = req.body;
-        const result = await donationsDbOperations.updateDonation(id, updatedValues.date, updatedValues.item, updatedValues.reason);
+        const result = await donationsDbOperations.updateDonation(id, updatedValues.date, updatedValues.item, updatedValues.reason, updatedValues.memberId);
         res.json(result);
     } catch (e) {
         console.log(e);

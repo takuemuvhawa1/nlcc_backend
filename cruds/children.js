@@ -3,16 +3,66 @@ const pool = require('./poolfile');
 
 let childrenObj = {};
 
+// childrenObj.postChild = (parentID, name, surname, dob, relationship, gender) => {
+//     console.log("CHILD " + dob)
+//     return new Promise((resolve, reject) => {
+//         pool.query('INSERT INTO children(parentID, name, surname, dob, relationship, gender) VALUES (?, ?, ?, ?, ?, ?)', 
+//         [parentID, name, surname, dob, relationship, gender], 
+//         (err, result) => {
+//             if (err) return reject(err);
+//             return resolve({ status: '200', message: 'Child record added successfully' });
+//         });
+//     });
+// };
+
+// childrenObj.postChild = (parentID, name, surname, dob, relationship, gender) => {
+
+//     // Format the date to YYYY-MM-DD
+//     const formattedDob = new Date(dob).toISOString().split('T')[0];
+
+//     return new Promise((resolve, reject) => {
+//         pool.query(
+//             'INSERT INTO children(parentID, name, surname, dob, relationship, gender) VALUES (?, ?, ?, ?, ?, ?)', 
+//             [parentID, name, surname, formattedDob, relationship, gender], 
+//             (err, result) => {
+//                 if (err) return reject(err);
+//                 return resolve({ status: '200', message: 'Child record added successfully' });
+//             }
+//         );
+//     });
+// };
+
 childrenObj.postChild = (parentID, name, surname, dob, relationship, gender) => {
+    console.log("Received DOB: " + dob); // Log the date received
+
+    // Create a Date object
+    const dateObj = new Date(dob);
+    
+    // Check if the date is valid
+    if (isNaN(dateObj.getTime())) {
+        return Promise.reject(new Error("Invalid date format"));
+    }
+
+    // Add 1 day to the date
+    dateObj.setDate(dateObj.getDate() + 1);
+
+    // Format the date to YYYY-MM-DD
+    const formattedDob = dateObj.toISOString().split('T')[0];
+    console.log("Formatted DOB: " + formattedDob); // Log the formatted date
+
     return new Promise((resolve, reject) => {
-        pool.query('INSERT INTO children(parentID, name, surname, dob, relationship, gender) VALUES (?, ?, ?, ?, ?, ?)', 
-        [parentID, name, surname, dob, relationship, gender], 
-        (err, result) => {
-            if (err) return reject(err);
-            return resolve({ status: '200', message: 'Child record added successfully' });
-        });
+        pool.query(
+            'INSERT INTO children(parentID, name, surname, dob, relationship, gender) VALUES (?, ?, ?, ?, ?, ?)', 
+            [parentID, name, surname, formattedDob, relationship, gender], 
+            (err, result) => {
+                if (err) return reject(err);
+                return resolve({ status: '200', message: 'Child record added successfully' });
+            }
+        );
     });
 };
+
+
 
 childrenObj.getChildren = () => {
     return new Promise((resolve, reject) => {

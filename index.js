@@ -49,6 +49,7 @@ const memberMinistryRouter = require('./routes/memberMinistries');
 const volunteerTasksRouter = require('./routes/volunteer_tasks');
 const prayersRouter = require('./routes/prayers');
 const childrenRouter = require('./routes/children');
+const donationsRouter = require('./routes/donations');
 
 const app = express();
 app.use(express.json());
@@ -62,6 +63,7 @@ app.use('/families', familyRouter);
 app.use('/memberfamily', memberFamilyRouter);
 app.use('/attendance', attendanceRouter);
 app.use('/contributions', contributionRouter);
+app.use('/donations', donationsRouter);
 app.use('/pledges', pledgeRouter);
 app.use('/eventreg', eventRegistrationRouter);
 app.use('/events', eventRouter);

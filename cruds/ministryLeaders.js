@@ -3,10 +3,10 @@ const pool = require('./poolfile');
 
 let ministryLeadersObj = {};
 
-ministryLeadersObj.postLeader = (MinistryID, LeaderID, StartDate, EndDate) => {
+ministryLeadersObj.postLeader = (MinistryID, LeaderID, StartDate, EndDate, preferred) => {
     return new Promise((resolve, reject) => {
-        pool.query('INSERT INTO ministryleaders(MinistryID, LeaderID, StartDate, EndDate) VALUES (?, ?, ?, ?)', 
-        [MinistryID, LeaderID, StartDate, EndDate], 
+        pool.query('INSERT INTO ministryleaders(MinistryID, LeaderID, StartDate, EndDate, preferred) VALUES (?, ?, ?, ?, ?)', 
+        [MinistryID, LeaderID, StartDate, EndDate, preferred], 
         (err, result) => {
             if (err) return reject(err);
             return resolve({ status: '200', message: 'Ministry leader added successfully' });
@@ -32,10 +32,10 @@ ministryLeadersObj.getLeaderById = (leaderId) => {
     });
 };
 
-ministryLeadersObj.updateLeader = (MinistryLeaderID, MinistryID, LeaderID, StartDate, EndDate) => {
+ministryLeadersObj.updateLeader = (MinistryLeaderID, MinistryID, LeaderID, StartDate, EndDate, preferred) => {
     return new Promise((resolve, reject) => {
-        pool.query('UPDATE ministryleaders SET MinistryID = ?, LeaderID = ?, StartDate = ?, EndDate = ? WHERE MinistryLeaderID = ?',
-            [MinistryID, LeaderID, StartDate, EndDate, MinistryLeaderID], 
+        pool.query('UPDATE ministryleaders SET MinistryID = ?, LeaderID = ?, StartDate = ?, EndDate = ?, preferred = ? WHERE MinistryLeaderID = ?',
+            [MinistryID, LeaderID, StartDate, EndDate, preferred, MinistryLeaderID], 
             (err, result) => {
                 if (err) return reject(err);
                 return resolve({ status: '200', message: 'Ministry leader updated successfully' });

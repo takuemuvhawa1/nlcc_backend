@@ -159,7 +159,7 @@ ministryRouter.get('/ministry-leaders/:memberId', async (req, res) => {
     }
 });
 
-
+// UPDATE 123456789966969999999999999999999999999999999999999999999999
 ministryRouter.get('/ministry/:memberId', async (req, res) => {
     const memberId = req.params.memberId; 
     try {
@@ -186,6 +186,8 @@ ministryRouter.get('/ministry/:memberId', async (req, res) => {
                 leaderID: ministry.LeaderID,
                 admin: `${ministry.LeaderName} ${ministry.LeaderSurname}`,
                 adminphone: ministry.Phoneno,
+                adminemail: ministry.LeaderEmail,
+                preferred: ministry.preferred,
                 request: ministry.request,
                 joined: joinState, 
                 PendingLeave: pendingLeaveState, 

@@ -6,6 +6,7 @@ const childrenDbOperations = require('../cruds/children');
 childrenRouter.post('/', async (req, res) => {
     try {
         const postedValues = req.body;
+        console.log(postedValues.dob)
         const results = await childrenDbOperations.postChild(postedValues.parentID, postedValues.name, postedValues.surname, postedValues.dob, postedValues.relationship, postedValues.gender);
         res.json(results);
     } catch (e) {

@@ -3,10 +3,10 @@ const pool = require('./poolfile');
 
 let contributionsObj = {};
 
-contributionsObj.postContribution = (MemberID, Date, Amount, Method, PledgeID, ProjectID) => {
+contributionsObj.postContribution = (MemberID, Date, Amount, Method, PledgeID, ProjectID, currency,) => {
     return new Promise((resolve, reject) => {
-        pool.query('INSERT INTO contributions(MemberID, Date, Amount, Method, PledgeID, ProjectID) VALUES (? ,?, ?, ?, ?, ?)', 
-        [MemberID, Date, Amount, Method, PledgeID, ProjectID], 
+        pool.query('INSERT INTO contributions(MemberID, Date, Amount, Method, PledgeID, ProjectID, currency) VALUES (? ,?, ?, ?, ?, ?, ?)', 
+        [MemberID, Date, Amount, Method, PledgeID, ProjectID, currency], 
         (err, result) => {
             if (err) return reject(err);
             return resolve({ status: '200', message: 'Contribution added successfully' });
@@ -26,7 +26,7 @@ contributionsObj.getContributions = () => {
 contributionsObj.getAllContributionsWithProjects = () => {
     return new Promise((resolve, reject) => {
         const query = `
-            SELECT c.ContributionID, c.MemberID, c.Date, c.Amount, p.ProjectName, p.Description, m.Name AS memberName, m.Surname As memberSurname
+            SELECT c.ContributionID, c.MemberID, c.Date, c.Amount, c.currency, p.ProjectName, p.Description, m.Name AS memberName, m.Surname As memberSurname
             FROM contributions c
             JOIN projects p ON c.ProjectID = p.ProjectID
             JOIN members m ON c.MemberID = m.MemberID
@@ -40,7 +40,7 @@ contributionsObj.getAllContributionsWithProjects = () => {
 contributionsObj.getContributionsWithProjects = (id) => {
     return new Promise((resolve, reject) => {
         const query = `
-            SELECT c.ContributionID, c.MemberID, c.Date, c.Amount, p.ProjectName, p.Description, m.Name AS memberName, m.Surname As memberSurname
+            SELECT c.ContributionID, c.MemberID, c.Date, c.Amount, c.currency, p.ProjectName, p.Description, m.Name AS memberName, m.Surname As memberSurname
             FROM contributions c
             JOIN projects p ON c.ProjectID = p.ProjectID
             JOIN members m ON c.MemberID = m.MemberID  WHERE c.MemberID = ${id}

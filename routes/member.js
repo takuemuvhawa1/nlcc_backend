@@ -13,6 +13,49 @@ memberRouter.post('/', async (req, res) => {
     }
 });
 
+// memberRouter.post('/details', async (req, res) => {
+//     try {
+//         const postedValues = req.body;
+//         const results = await membersDbOperations.postMemberDetails(
+//             postedValues.address,
+//             postedValues.city,
+//             postedValues.nxt_of_kin,
+//             postedValues.nok_relationship,
+//             postedValues.nok_phone,
+//             postedValues.emergency_contact,
+//             postedValues.emerg_con_relationship,
+//             postedValues.emerg_phone
+//         );
+//         res.json(results);
+//     } catch (e) {
+//         console.log(e);
+//         res.sendStatus(500);
+//     }
+// });
+
+memberRouter.put('/details/:memberID', async (req, res) => {
+    try {
+        const memberID = req.params.memberID; // Get memberID from URL parameters
+        const postedValues = req.body;
+        const results = await membersDbOperations.updateMemberDetails(
+            memberID,
+            postedValues.address,
+            postedValues.city,
+            postedValues.nxt_of_kin,
+            postedValues.nok_relationship,
+            postedValues.nok_phone,
+            postedValues.emergency_contact,
+            postedValues.emerg_con_relationship,
+            postedValues.emerg_phone
+        );
+        res.json(results);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+
 memberRouter.get('/', async (req, res) => {
     try {
         const results = await membersDbOperations.getMembers();

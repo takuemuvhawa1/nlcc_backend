@@ -48,6 +48,7 @@ const sermonsRouter = require('./routes/sermons');
 const memberMinistryRouter = require('./routes/memberMinistries');
 const volunteerTasksRouter = require('./routes/volunteer_tasks');
 const prayersRouter = require('./routes/prayers');
+const childrenRouter = require('./routes/children');
 
 const app = express();
 app.use(express.json());
@@ -56,6 +57,7 @@ app.use(cors());
 //App Route Usage
 app.use('/users', userRouter);
 app.use('/members', memberRouter);
+app.use('/children', childrenRouter);
 app.use('/families', familyRouter);
 app.use('/memberfamily', memberFamilyRouter);
 app.use('/attendance', attendanceRouter);

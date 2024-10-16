@@ -18,6 +18,19 @@ onBoardingRouter.post('/searchmember', async (req, res) => {
     }
 });
 
+//post member
+onBoardingRouter.post('/member', async (req, res) => {
+    try {
+        const postedValues = req.body;
+        const results = await onBoardingDbOperations.postMember(postedValues.Name, postedValues.Surname, postedValues.Email, postedValues.Phone, postedValues.Address, postedValues.Country, postedValues.Gender);
+        res.json(results);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
+
 onBoardingRouter.post('/forgotpassword', async (req, res) => {
     try {
         const { email } = req.body;

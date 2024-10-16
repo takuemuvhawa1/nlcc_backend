@@ -45,6 +45,53 @@ crudsObj.searchMember = async (email) => {
     });
 };
 
+//POST Member
+crudsObj.postMember = async (Name, Surname, Email, Phone, Address, Country, MembershipStatus, Gender) => {
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT Name, Surname FROM members WHERE Email = ?', [Email], async (err, results) => {
+            if (err) {
+                return reject(err);
+            }
+            // Check if the email is already registered
+            if (results.length > 0) {
+                return resolve({ status: '401', message: 'User already registered' });
+            }
+
+            // If email is not found, proceed to insert the new member
+            pool.query('INSERT INTO members(Name, Surname, Email, Phone, Address, Country, MembershipStatus, Gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
+            [Name, Surname, Email, Phone, Address, Country, MembershipStatus, Gender], 
+            async (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+
+                let randNum = '';
+
+                for (let i = 1; i < 5; i++) {
+                    randNum += (Math.floor(Math.random() * 10)).toString();
+                }
+
+                // Email to send OTP
+                const data = {
+                    username: Name,
+                    user_email: Email,
+                    otp: randNum
+                };
+
+                try {
+                    // Send the OTP email
+                    const response = await axios.post(`${poolapi}/mailer/otp`, data);
+                    return resolve({ status: '200', message: 'Member added successfully', randNum });
+                } catch (emailErr) {
+                    console.error('Error sending OTP email:', emailErr);
+                    return reject({ status: '500', message: 'Failed to send OTP email' });
+                }
+            });
+        });
+    });
+};
+
+
 //Forgot password
 
 crudsObj.forgotPassword = async (email) => {

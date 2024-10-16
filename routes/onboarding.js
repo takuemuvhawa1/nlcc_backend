@@ -22,7 +22,7 @@ onBoardingRouter.post('/searchmember', async (req, res) => {
 onBoardingRouter.post('/member', async (req, res) => {
     try {
         const postedValues = req.body;
-        const results = await onBoardingDbOperations.postMember(postedValues.Name, postedValues.Surname, postedValues.Email, postedValues.Phone, postedValues.Address, postedValues.Country, postedValues.Gender);
+        const results = await onBoardingDbOperations.postMember(postedValues.name, postedValues.surname, postedValues.email, postedValues.phone, postedValues.address, postedValues.country, postedValues.gender, postedValues.registerwith);
         res.json(results);
     } catch (e) {
         console.log(e);

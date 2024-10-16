@@ -163,20 +163,15 @@ app.get('/download/:filename', (req, res) => {
 });
 
 // const options = {
-//   cert: fs.readFileSync('/etc/letsencrypt/live/srv620177.hstgr.cloud/fullchain.pem'),
-//   key: fs.readFileSync('/etc/letsencrypt/live/srv620177.hstgr.cloud/privkey.pem')
+//   cert: fs.readFileSync(`${process.env.HOME}/cert.pem`),
+//   key: fs.readFileSync(`${process.env.HOME}/key.pem`)
 // };
 
-const options = {
-  cert: fs.readFileSync(`${process.env.HOME}/cert.pem`),
-  key: fs.readFileSync(`${process.env.HOME}/key.pem`)
-};
-
-https.createServer(options, app).listen(process.env.APPPORT || '3003', () => {
-  console.log('app is listening to port' + process.env.APPPORT);
-});
-
-
-// app.listen(process.env.APPPORT || '3003', () => {
+// https.createServer(options, app).listen(process.env.APPPORT || '3003', () => {
 //   console.log('app is listening to port' + process.env.APPPORT);
 // });
+
+
+app.listen(process.env.APPPORT || '3003', () => {
+  console.log('app is listening to port' + process.env.APPPORT);
+});

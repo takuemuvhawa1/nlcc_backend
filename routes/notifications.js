@@ -6,7 +6,7 @@ notificationsRouter.post('/', async (req, res) => {
     try {
         const postedValues = req.body;
         console.log(postedValues)
-        const results = await notificationsDbOperations.postNotification(postedValues.header, postedValues.content, postedValues.date, postedValues.time, postedValues.MemberID);
+        const results = await notificationsDbOperations.postNotification(postedValues.header, postedValues.content, postedValues.date, postedValues.time, postedValues.MemberID, postedValues.ministryID);
         res.json(results);
     } catch (e) {
         console.log(e);

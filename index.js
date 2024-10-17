@@ -50,6 +50,7 @@ const volunteerTasksRouter = require('./routes/volunteer_tasks');
 const prayersRouter = require('./routes/prayers');
 const childrenRouter = require('./routes/children');
 const donationsRouter = require('./routes/donations');
+const notificationRecipientsRouter = require('./routes/notificationRecipients');
 
 const app = express();
 app.use(express.json());
@@ -83,6 +84,7 @@ app.use('/projects', projectsRouter);
 app.use('/mailer', mailerRouter);
 app.use('/onboarding', onBoardingRouter);
 app.use('/notifications', notificationsRouter);
+app.use('/notification-reci', notificationRecipientsRouter);
 app.use('/sermons', sermonsRouter);
 app.use('/prayer-req', prayersRouter);
 

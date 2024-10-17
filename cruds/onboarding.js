@@ -48,7 +48,7 @@ crudsObj.searchMember = async (email) => {
 //POST Member
 crudsObj.postMember = async (name, surname, email, phone, address, country, membershipStatus, gender, registerwith) => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT Name, Surname FROM members WHERE Email = ?', [Email], async (err, results) => {
+        pool.query('SELECT Name, Surname FROM members WHERE Email = ?', [email], async (err, results) => {
             if (err) {
                 return reject(err);
             }
@@ -73,8 +73,8 @@ crudsObj.postMember = async (name, surname, email, phone, address, country, memb
 
                 // Email to send OTP
                 const data = {
-                    username: Name,
-                    user_email: Email,
+                    username: name,
+                    user_email: email,
                     otp: randNum
                 };
 

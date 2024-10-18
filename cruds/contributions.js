@@ -62,10 +62,10 @@ contributionsObj.getContributionById = (contributionId) => {
     });
 };
 
-contributionsObj.updateContribution = (ContributionID, MemberID, Date, Amount, Method, PledgeID, ProjectID) => {
+contributionsObj.updateContribution = (ContributionID, MemberID, Date, Amount, Method, PledgeID, ProjectID, currency) => {
     return new Promise((resolve, reject) => {
-        pool.query('UPDATE contributions SET MemberID = ?, Date = ?, Amount = ?, Method = ?, PledgeID = ?, ProjectID = ? WHERE ContributionID = ?',
-            [MemberID, Date, Amount, Method, PledgeID, ProjectID, ContributionID], 
+        pool.query('UPDATE contributions SET MemberID = ?, Date = ?, Amount = ?, Method = ?, PledgeID = ?, ProjectID = ?, currency = ? WHERE ContributionID = ?',
+            [MemberID, Date, Amount, Method, PledgeID, ProjectID, currency, ContributionID], 
             (err, result) => {
                 if (err) return reject(err);
                 return resolve({ status: '200', message: 'Contribution updated successfully' });

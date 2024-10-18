@@ -59,7 +59,7 @@ contributionRouter.put('/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const updatedValues = req.body;
-        const result = await contributionsDbOperations.updateContribution(id, updatedValues.MemberID, updatedValues.Date, updatedValues.Amount, updatedValues.Method, updatedValues.PledgeID, updatedValues.ProjectID);
+        const result = await contributionsDbOperations.updateContribution(id, updatedValues.MemberID, updatedValues.Date, updatedValues.Amount, updatedValues.Method, updatedValues.PledgeID, updatedValues.ProjectID, updatedValues.currency);
         res.json(result);
     } catch (e) {
         console.log(e);

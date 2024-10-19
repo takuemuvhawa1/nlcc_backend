@@ -160,104 +160,104 @@ ministryRouter.get('/ministry-leaders/:memberId', async (req, res) => {
 });
 
 // UPDATE 123456789966969999999999999999999999999999999999999999999999
-// ministryRouter.get('/ministry/:memberId', async (req, res) => {
-//     const memberId = req.params.memberId; 
-//     try {
-//         const results = await ministriesDbOperations.getMinistriesJoin2(memberId);
-//         const response = await Promise.all(results.map(async ministry => {
-//             const leaderStatus = ministry.LeaderID == memberId; 
-//             let joinState = false;
-//             let pendingLeaveState = false;
-//             let pendingJoinState = false;
-
-//             if(ministry.request === "Approved" && ministry.MemberID){
-//                 joinState = true;
-//             }
-//             if(ministry.request === "leave" && ministry.MemberID){
-//                 joinState = true;
-//                 pendingLeaveState = true;
-//             }
-//             if(ministry.request === null && ministry.MemberID){
-//                 pendingJoinState = true;
-//             }
-
-//             // Group leaders by MinistryID
-//             const leaders = await ministriesDbOperations.getLeadersForMinistry(ministry.MinistryID);
-
-//             return {
-//                 id: ministry.MinistryID,
-//                 name: ministry.MinistryName,
-//                 description: ministry.Description,
-//                 leaderID: ministry.LeaderID,
-//                 admin: `${ministry.LeaderName} ${ministry.LeaderSurname}`,
-//                 adminphone: ministry.Phoneno,
-//                 adminemail: ministry.LeaderEmail,
-//                 preferred: ministry.preferred,
-//                 request: ministry.request,
-//                 joined: joinState, 
-//                 PendingLeave: pendingLeaveState, 
-//                 pendingJoin: pendingJoinState, 
-//                 leaderStatus: leaderStatus,
-//                 leaders: leaders
-//             };
-//         }));
-//         res.json(response);
-//     } catch (e) {
-//         console.log(e);
-//         res.sendStatus(500);
-//     }
-// });
-
 ministryRouter.get('/ministry/:memberId', async (req, res) => {
     const memberId = req.params.memberId; 
     try {
         const results = await ministriesDbOperations.getMinistriesJoin2(memberId);
-        
-        // Create a map to store unique ministries
-        const ministryMap = {};
+        const response = await Promise.all(results.map(async ministry => {
+            const leaderStatus = ministry.LeaderID == memberId; 
+            let joinState = false;
+            let pendingLeaveState = false;
+            let pendingJoinState = false;
 
-        results.forEach(ministry => {
-            const ministryId = ministry.MinistryID;
-
-            // If the ministry is not in the map, add it
-            if (!ministryMap[ministryId]) {
-                ministryMap[ministryId] = {
-                    id: ministryId,
-                    name: ministry.MinistryName,
-                    description: ministry.Description,
-                    leaderID: ministry.LeaderID,
-                    admin: `${ministry.LeaderName} ${ministry.LeaderSurname}`,
-                    adminphone: ministry.Phoneno,
-                    adminemail: ministry.LeaderEmail,
-                    preferred: ministry.preferred,
-                    request: ministry.request,
-                    joined: ministry.request === "Approved" && ministry.MemberID,
-                    PendingLeave: ministry.request === "leave" && ministry.MemberID,
-                    pendingJoin: ministry.request === null && ministry.MemberID,
-                    leaderStatus: ministry.LeaderID == memberId,
-                    leaders: []
-                };
+            if(ministry.request === "Approved" && ministry.MemberID){
+                joinState = true;
+            }
+            if(ministry.request === "leave" && ministry.MemberID){
+                joinState = true;
+                pendingLeaveState = true;
+            }
+            if(ministry.request === null && ministry.MemberID){
+                pendingJoinState = true;
             }
 
-            // Add the leader to the leaders array
-            ministryMap[ministryId].leaders.push({
+            // Group leaders by MinistryID
+            const leaders = await ministriesDbOperations.getLeadersForMinistry(ministry.MinistryID);
+
+            return {
+                id: ministry.MinistryID,
+                name: ministry.MinistryName,
+                description: ministry.Description,
                 leaderID: ministry.LeaderID,
                 admin: `${ministry.LeaderName} ${ministry.LeaderSurname}`,
                 adminphone: ministry.Phoneno,
                 adminemail: ministry.LeaderEmail,
-                email_comm: false, // Set based on your logic
-                phone_comm: true // Set based on your logic
-            });
-        });
-
-        // Convert the map back to an array
-        const response = Object.values(ministryMap);
+                preferred: ministry.preferred,
+                request: ministry.request,
+                joined: joinState, 
+                PendingLeave: pendingLeaveState, 
+                pendingJoin: pendingJoinState, 
+                leaderStatus: leaderStatus,
+                leaders: leaders
+            };
+        }));
         res.json(response);
     } catch (e) {
         console.log(e);
         res.sendStatus(500);
     }
 });
+
+// ministryRouter.get('/ministry/:memberId', async (req, res) => {
+//     const memberId = req.params.memberId; 
+//     try {
+//         const results = await ministriesDbOperations.getMinistriesJoin2(memberId);
+        
+//         // Create a map to store unique ministries
+//         const ministryMap = {};
+
+//         results.forEach(ministry => {
+//             const ministryId = ministry.MinistryID;
+
+//             // If the ministry is not in the map, add it
+//             if (!ministryMap[ministryId]) {
+//                 ministryMap[ministryId] = {
+//                     id: ministryId,
+//                     name: ministry.MinistryName,
+//                     description: ministry.Description,
+//                     leaderID: ministry.LeaderID,
+//                     admin: `${ministry.LeaderName} ${ministry.LeaderSurname}`,
+//                     adminphone: ministry.Phoneno,
+//                     adminemail: ministry.LeaderEmail,
+//                     preferred: ministry.preferred,
+//                     request: ministry.request,
+//                     joined: ministry.request === "Approved" && ministry.MemberID,
+//                     PendingLeave: ministry.request === "leave" && ministry.MemberID,
+//                     pendingJoin: ministry.request === null && ministry.MemberID,
+//                     leaderStatus: ministry.LeaderID == memberId,
+//                     leaders: []
+//                 };
+//             }
+
+//             // Add the leader to the leaders array 
+//             ministryMap[ministryId].leaders.push({
+//                 leaderID: ministry.LeaderID,
+//                 admin: `${ministry.LeaderName} ${ministry.LeaderSurname}`,
+//                 adminphone: ministry.Phoneno,
+//                 adminemail: ministry.LeaderEmail,
+//                 email_comm: false, 
+//                 phone_comm: true 
+//             });
+//         });
+
+//         // Convert the map back to an array
+//         const response = Object.values(ministryMap);
+//         res.json(response);
+//     } catch (e) {
+//         console.log(e);
+//         res.sendStatus(500);
+//     }
+// });
 
 
 

@@ -93,7 +93,7 @@ memberRouter.get('/all/:status', async (req, res) => {
     }
 });
 
-memberRouter.get('/preferred/comm/:id', async (req, res) => {
+memberRouter.get('/preferred/communinication/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const results = await membersDbOperations.getMembersByPreferred(id);

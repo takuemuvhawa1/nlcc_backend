@@ -117,6 +117,17 @@ memberRouter.get('/:id', async (req, res) => {
     }
 });
 
+memberRouter.get('/nok/spouse/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const result = await membersDbOperations.getMemberNokSpouse(id);
+        res.json(result);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
 memberRouter.put('/:id', async (req, res) => {
     try {
         const id = req.params.id;

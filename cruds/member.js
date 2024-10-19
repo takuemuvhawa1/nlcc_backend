@@ -95,6 +95,17 @@ crudsObj.getMemberById = (memberId) => {
     });
 };
 
+crudsObj.getMemberNokSpouse = (memberId) => {
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT m.MemberID, m.nxt_of_kin, m.nok_relationship, m.nok_phone, m.emergency_contact, m.emerg_con_relationship, m.emerg_phone FROM members m WHERE MemberID = ?', [memberId], (err, results) => {
+            if (err) {
+                return reject(err);
+            }
+            return resolve(results);
+        });
+    });
+};
+
 
 crudsObj.updateMember = (MemberID, Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone) => {
     return new Promise((resolve, reject) => {

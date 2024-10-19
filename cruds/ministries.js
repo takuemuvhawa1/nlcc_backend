@@ -85,6 +85,8 @@ ministriesObj.getMinistriesJoin2 = (memberId) => {
                 mem.Surname AS LeaderSurname, 
                 mem.Phone AS Phoneno,
                 mem.Email AS LeaderEmail,
+                mem.preferred_email AS email_comm, 
+                mem.preferred_phone AS phone_comm,
                 mm.MemberID,
                 mm.request
             FROM 

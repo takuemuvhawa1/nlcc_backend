@@ -103,6 +103,38 @@ ministriesObj.getMinistriesJoin2 = (memberId) => {
     });
 };
 
+ministriesObj.getLeadersForMinistry = (ministryId) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT 
+                ml.LeaderID, 
+                m.Name AS adminName, 
+                m.Surname AS adminSurname, 
+                m.Phone AS adminphone, 
+                m.Email AS adminemail,
+                m.preferred_email AS email_comm, 
+                m.preferred_phone AS phone_comm
+            FROM 
+                ministryleaders ml 
+            JOIN 
+                members m ON ml.LeaderID = m.MemberID 
+            WHERE 
+                ml.MinistryID = ?`;
+
+        pool.query(query, [ministryId], (err, results) => {
+            if (err) return reject(err);
+            return resolve(results.map(leader => ({
+                leaderID: leader.LeaderID,
+                admin: `${leader.adminName} ${leader.adminSurname}`,
+                adminphone: leader.adminphone,
+                adminemail: leader.adminemail,
+                email_comm: !!leader.email_comm, // Convert to boolean
+                phone_comm: !!leader.phone_comm, // Convert to boolean
+            })));
+        });
+    });
+};
+
 ministriesObj.getMembersByMinistryId = (ministryId) => {
     return new Promise((resolve, reject) => {
         const query = `

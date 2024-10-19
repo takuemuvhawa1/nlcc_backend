@@ -32,6 +32,15 @@ ministryLeadersObj.getLeaderById = (leaderId) => {
     });
 };
 
+ministryLeadersObj.getByMinistryId = (MinistryID) => {
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT * FROM ministryleaders WHERE MinistryID = ?', [MinistryID], (err, results) => {
+            if (err) return reject(err);
+            return resolve(results);
+        });
+    });
+};
+
 ministryLeadersObj.updateLeader = (MinistryLeaderID, MinistryID, LeaderID, StartDate, EndDate, preferred) => {
     return new Promise((resolve, reject) => {
         pool.query('UPDATE ministryleaders SET MinistryID = ?, LeaderID = ?, StartDate = ?, EndDate = ?, preferred = ? WHERE MinistryLeaderID = ?',

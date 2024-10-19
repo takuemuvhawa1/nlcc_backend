@@ -44,9 +44,9 @@ memberRouter.put('/details/:memberID', async (req, res) => {
             postedValues.nxt_of_kin,
             postedValues.nok_relationship,
             postedValues.nok_phone,
-            postedValues.emergency_contact,
-            postedValues.emerg_con_relationship,
-            postedValues.emerg_phone
+            postedValues.sponame,
+            postedValues.marital_status,
+            postedValues.spophone
         );
         res.json(results);
     } catch (e) {

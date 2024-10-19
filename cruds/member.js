@@ -5,14 +5,14 @@ let crudsObj = {};
 
 crudsObj.postMember = (Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone) => {
     return new Promise((resolve, reject) => {
-        pool.query('INSERT INTO members(Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
-        [Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone], 
-        (err, result) => {
-            if (err) {
-                return reject(err);
-            }
-            return resolve({ status: '200', message: 'Member added successfully' });
-        });
+        pool.query('INSERT INTO members(Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone],
+            (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve({ status: '200', message: 'Member added successfully' });
+            });
     });
 };
 
@@ -95,9 +95,19 @@ crudsObj.getMemberById = (memberId) => {
     });
 };
 
+// crudsObj.getMemberNokSpouse = (memberId) => {
+//     return new Promise((resolve, reject) => {
+//         pool.query('SELECT m.MemberID, m.nxt_of_kin, m.nok_relationship, m.nok_phone, m.emergency_contact, m.emerg_con_relationship, m.emerg_phone FROM members m WHERE MemberID = ?', [memberId], (err, results) => {
+//             if (err) {
+//                 return reject(err);
+//             }
+//             return resolve(results);
+//         });
+//     });
+// };
 crudsObj.getMemberNokSpouse = (memberId) => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT m.MemberID, m.nxt_of_kin, m.nok_relationship, m.nok_phone, m.emergency_contact, m.emerg_con_relationship, m.emerg_phone FROM members m WHERE MemberID = ?', [memberId], (err, results) => {
+        pool.query('SELECT m.MemberID, m.nxt_of_kin, m.nok_relationship, m.nok_phone, m.sponame, m.marital_status, m.spophone FROM members m WHERE MemberID = ?', [memberId], (err, results) => {
             if (err) {
                 return reject(err);
             }
@@ -110,7 +120,7 @@ crudsObj.getMemberNokSpouse = (memberId) => {
 crudsObj.updateMember = (MemberID, Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone) => {
     return new Promise((resolve, reject) => {
         pool.query('UPDATE members SET Name = ?, Surname = ?, Email = ?, Phone = ?, Address = ?, City = ?, Country = ?, MembershipStatus = ?, ProfilePicture = ?, Gender = ?, Suburb = ?, Zone = ?, nxt_of_kin = ?, nok_relationship = ?, nok_phone = ?, emergency_contact = ?, emerg_con_relationship = ?, emerg_phone = ? WHERE MemberID = ?',
-            [Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone, MemberID], 
+            [Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone, MemberID],
             (err, result) => {
                 if (err) {
                     return reject(err);
@@ -123,7 +133,7 @@ crudsObj.updateMember = (MemberID, Name, Surname, Email, Phone, Address, City, C
 crudsObj.updateMemberProfilePic = (MemberID, ProfilePicture) => {
     return new Promise((resolve, reject) => {
         pool.query('UPDATE members SET ProfilePicture = ? WHERE MemberID = ?',
-            [ProfilePicture, MemberID], 
+            [ProfilePicture, MemberID],
             (err, result) => {
                 if (err) {
                     return reject(err);
@@ -134,30 +144,30 @@ crudsObj.updateMemberProfilePic = (MemberID, ProfilePicture) => {
 };
 
 crudsObj.updateMemberDetails = (
-    memberID, 
-    Address, 
-    City, 
+    memberID,
+    Address,
+    City,
     nxt_of_kin,
     nok_relationship,
     nok_phone,
-    emergency_contact,
-    emerg_con_relationship,
-    emerg_phone
+    sponame,
+    marital_status,
+    spophone
 ) => {
     return new Promise((resolve, reject) => {
         pool.query(
-            'UPDATE members SET Address = ?, City = ?, nxt_of_kin = ?, nok_relationship = ?, nok_phone = ?, emergency_contact = ?, emerg_con_relationship = ?, emerg_phone = ? WHERE MemberID = ?', 
+            'UPDATE members SET Address = ?, City = ?, nxt_of_kin = ?, nok_relationship = ?, nok_phone = ?, sponame = ?, marital_status = ?, spophone = ? WHERE MemberID = ?',
             [
-                Address, 
-                City, 
+                Address,
+                City,
                 nxt_of_kin,
                 nok_relationship,
                 nok_phone,
-                emergency_contact,
-                emerg_con_relationship,
-                emerg_phone,
+                sponame,
+                marital_status,
+                spophone,
                 memberID
-            ], 
+            ],
             (err, result) => {
                 if (err) {
                     return reject(err);
@@ -170,8 +180,8 @@ crudsObj.updateMemberDetails = (
 crudsObj.updateMemberPreferred = (memberID, email, phone) => {
     return new Promise((resolve, reject) => {
         pool.query(
-            'UPDATE members SET preferred_email = ?, preferred_phone = ? WHERE MemberID = ?', 
-            [ email, phone, memberID ], (err, result) => {
+            'UPDATE members SET preferred_email = ?, preferred_phone = ? WHERE MemberID = ?',
+            [email, phone, memberID], (err, result) => {
                 if (err) {
                     return reject(err);
                 }

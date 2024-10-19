@@ -158,17 +158,9 @@ crudsObj.updateMemberDetails = (
 };
 crudsObj.updateMemberPreferred = (memberID, email, phone) => {
     return new Promise((resolve, reject) => {
-        let preferred_email = true;
-        let preferred_phone = true;
-        if(email === false){
-            preferred_email = false;
-        }
-        if(phone === false){
-            preferred_phone = false;
-        }
         pool.query(
             'UPDATE members SET preferred_email = ?, preferred_phone = ? WHERE MemberID = ?', 
-            [ preferred_email, preferred_phone, memberID ], (err, result) => {
+            [ email, phone, memberID ], (err, result) => {
                 if (err) {
                     return reject(err);
                 }

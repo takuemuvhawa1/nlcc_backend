@@ -64,6 +64,8 @@ memberRouter.put('/preferred/comm/:memberID', async (req, res) => {
             postedValues.email,
             postedValues.phone,
         );
+        console.log(postedValues.phone);
+
         res.json(results);
     } catch (e) {
         console.log(e);

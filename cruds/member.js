@@ -3,10 +3,10 @@ const pool = require('./poolfile');
 
 let crudsObj = {};
 
-crudsObj.postMember = (Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone) => {
+crudsObj.postMember = (Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone) => {
     return new Promise((resolve, reject) => {
-        pool.query('INSERT INTO members(Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
-        [Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone], 
+        pool.query('INSERT INTO members(Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+        [Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone], 
         (err, result) => {
             if (err) {
                 return reject(err);
@@ -73,9 +73,9 @@ crudsObj.getMembers = () => {
     });
 };
 
-crudsObj.getMembersByStatus = (status) => {
+crudsObj.getMembersByPreferred = (memberID) => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT * FROM members WHERE MembershipStatus = ?', [status], (err, results) => {
+        pool.query('SELECT preferred FROM members WHERE memberID = ?', [memberID], (err, results) => {
             if (err) {
                 return reject(err);
             }
@@ -96,10 +96,10 @@ crudsObj.getMemberById = (memberId) => {
 };
 
 
-crudsObj.updateMember = (MemberID, Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, Password) => {
+crudsObj.updateMember = (MemberID, Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone) => {
     return new Promise((resolve, reject) => {
-        pool.query('UPDATE members SET Name = ?, Surname = ?, Email = ?, Phone = ?, Address = ?, City = ?, Country = ?, MembershipStatus = ?, ProfilePicture = ?, Gender = ?, Suburb = ?, Zone = ?, Password = ? WHERE MemberID = ?',
-            [Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, Password, MemberID], 
+        pool.query('UPDATE members SET Name = ?, Surname = ?, Email = ?, Phone = ?, Address = ?, City = ?, Country = ?, MembershipStatus = ?, ProfilePicture = ?, Gender = ?, Suburb = ?, Zone = ?, nxt_of_kin = ?, nok_relationship = ?, nok_phone = ?, emergency_contact = ?, emerg_con_relationship = ?, emerg_phone = ? WHERE MemberID = ?',
+            [Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone, MemberID], 
             (err, result) => {
                 if (err) {
                     return reject(err);
@@ -148,6 +148,23 @@ crudsObj.updateMemberDetails = (
                 memberID
             ], 
             (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve({ status: '200', message: 'Member details updated successfully' });
+            }
+        );
+    });
+};
+crudsObj.updateMemberPreferred = (memberID, email, phone) => {
+    return new Promise((resolve, reject) => {
+        let preferred = 'email';
+        if(email === false){
+            preferred = 'phone';
+        }
+        pool.query(
+            'UPDATE members SET preferred = ? WHERE MemberID = ?', 
+            [ preferred, memberID ], (err, result) => {
                 if (err) {
                     return reject(err);
                 }

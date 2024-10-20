@@ -25,7 +25,7 @@ volunteerTasksObj.getTasks = () => {
 
 volunteerTasksObj.getTasksJoin = () => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT t.*, e.type FROM tblvolunteertasks t JOIN tblevents e ON t.event_id = e.id', (err, results) => {
+        pool.query('SELECT t.*, e.type, e.date FROM tblvolunteertasks t JOIN tblevents e ON t.event_id = e.id', (err, results) => {
             if (err) return reject(err);
             return resolve(results);
         });

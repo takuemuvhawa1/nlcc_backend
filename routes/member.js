@@ -5,7 +5,7 @@ const membersDbOperations = require('../cruds/member');
 memberRouter.post('/', async (req, res) => {
     try {
         const postedValues = req.body;
-        const results = await membersDbOperations.postMember(postedValues.Name, postedValues.Surname, postedValues.Email, postedValues.Phone, postedValues.Address, postedValues.City, postedValues.Country, postedValues.MembershipStatus, postedValues.ProfilePicture, postedValues.Gender, postedValues.Suburb, postedValues.Zone, postedValues.nxt_of_kin, postedValues.nok_relationship, postedValues.nok_phone, postedValues.emergency_contact, postedValues.emerg_con_relationship, postedValues.emerg_phone);
+        const results = await membersDbOperations.postMember(postedValues.Name, postedValues.Surname, postedValues.Email, postedValues.Phone, postedValues.Address, postedValues.City, postedValues.Country, postedValues.MembershipStatus, postedValues.ProfilePicture, postedValues.Gender, postedValues.Suburb, postedValues.Zone, postedValues.nxt_of_kin, postedValues.nok_relationship, postedValues.nok_phone, postedValues.emergency_contact, postedValues.emerg_con_relationship, postedValues.emerg_phone, postedValues.sponame, postedValues.spophone);
         res.json(results);
     } catch (e) {
         console.log(e);
@@ -132,7 +132,7 @@ memberRouter.put('/:id', async (req, res) => {
     try {
         const id = req.params.id;
         const updatedValues = req.body;
-        const result = await membersDbOperations.updateMember(id, updatedValues.Name, updatedValues.Surname, updatedValues.Email, updatedValues.Phone, updatedValues.Address, updatedValues.City, updatedValues.Country, updatedValues.MembershipStatus, updatedValues.ProfilePicture, updatedValues.Gender, updatedValues.Suburb, updatedValues.Zone, updatedValues.nxt_of_kin, updatedValues.nok_relationship, updatedValues.nok_phone, updatedValues.emergency_contact, updatedValues.emerg_con_relationship, updatedValues.emerg_phone);
+        const result = await membersDbOperations.updateMember(id, updatedValues.Name, updatedValues.Surname, updatedValues.Email, updatedValues.Phone, updatedValues.Address, updatedValues.City, updatedValues.Country, updatedValues.MembershipStatus, updatedValues.ProfilePicture, updatedValues.Gender, updatedValues.Suburb, updatedValues.Zone, updatedValues.nxt_of_kin, updatedValues.nok_relationship, updatedValues.nok_phone, updatedValues.emergency_contact, updatedValues.emerg_con_relationship, updatedValues.emerg_phone, updatedValues.sponame, updatedValues.spophone);
         res.json(result);
     } catch (e) {
         console.log(e);

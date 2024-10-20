@@ -2,11 +2,15 @@ require('dotenv').config();
 const pool = require('./poolfile');
 
 let crudsObj = {};
-
-crudsObj.postMember = (Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone) => {
+ 
+crudsObj.postMember = (Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone, sponame, spophone) => {
     return new Promise((resolve, reject) => {
-        pool.query('INSERT INTO members(Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone],
+        let marital_status = true;
+        if(sponame === null || sponame === ''){
+            marital_status = false
+        }
+        pool.query('INSERT INTO members(Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone, sponame, spophone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone, sponame, spophone],
             (err, result) => {
                 if (err) {
                     return reject(err);
@@ -95,6 +99,17 @@ crudsObj.getMemberById = (memberId) => {
     });
 };
 
+crudsObj.getMembersByStatus = (status) => {
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT * FROM members WHERE MembershipStatus = ?', [status], (err, results) => {
+            if (err) {
+                return reject(err);
+            }
+            return resolve(results);
+        });
+    });
+};
+
 // crudsObj.getMemberNokSpouse = (memberId) => {
 //     return new Promise((resolve, reject) => {
 //         pool.query('SELECT m.MemberID, m.nxt_of_kin, m.nok_relationship, m.nok_phone, m.emergency_contact, m.emerg_con_relationship, m.emerg_phone FROM members m WHERE MemberID = ?', [memberId], (err, results) => {
@@ -117,10 +132,10 @@ crudsObj.getMemberNokSpouse = (memberId) => {
 };
 
 
-crudsObj.updateMember = (MemberID, Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone) => {
+crudsObj.updateMember = (MemberID, Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone, sponame, spophone) => {
     return new Promise((resolve, reject) => {
-        pool.query('UPDATE members SET Name = ?, Surname = ?, Email = ?, Phone = ?, Address = ?, City = ?, Country = ?, MembershipStatus = ?, ProfilePicture = ?, Gender = ?, Suburb = ?, Zone = ?, nxt_of_kin = ?, nok_relationship = ?, nok_phone = ?, emergency_contact = ?, emerg_con_relationship = ?, emerg_phone = ? WHERE MemberID = ?',
-            [Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone, MemberID],
+        pool.query('UPDATE members SET Name = ?, Surname = ?, Email = ?, Phone = ?, Address = ?, City = ?, Country = ?, MembershipStatus = ?, ProfilePicture = ?, Gender = ?, Suburb = ?, Zone = ?, nxt_of_kin = ?, nok_relationship = ?, nok_phone = ?, emergency_contact = ?, emerg_con_relationship = ?, emerg_phone = ?, sponame = ?, spophone = ? WHERE MemberID = ?',
+            [Name, Surname, Email, Phone, Address, City, Country, MembershipStatus, ProfilePicture, Gender, Suburb, Zone, nxt_of_kin, nok_relationship, nok_phone, emergency_contact, emerg_con_relationship, emerg_phone, sponame, spophone, MemberID],
             (err, result) => {
                 if (err) {
                     return reject(err);

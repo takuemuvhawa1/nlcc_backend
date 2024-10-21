@@ -37,7 +37,7 @@ ministriesObj.getMinistries = () => {
 
 ministriesObj.getMinistriesJoin = () => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT m.MinistryID, m.Name AS MinistryName, m.Description, ml.LeaderID, mem.Name AS LeaderName, mem.Surname AS LeaderSurname, mem.Phone AS Phoneno FROM ministries m LEFT JOIN ministryleaders ml ON m.MinistryID = ml.MinistryID LEFT JOIN members mem ON ml.LeaderID = mem.MemberID ', (err, results) => {
+        pool.query('SELECT DISTINCT m.MinistryID, m.Name AS MinistryName, m.Description, ml.LeaderID, mem.Name AS LeaderName, mem.Surname AS LeaderSurname, mem.Phone AS Phoneno FROM ministries m LEFT JOIN ministryleaders ml ON m.MinistryID = ml.MinistryID LEFT JOIN members mem ON ml.LeaderID = mem.MemberID ', (err, results) => {
             if (err) return reject(err);
             return resolve(results);
         });

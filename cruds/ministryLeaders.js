@@ -32,9 +32,18 @@ ministryLeadersObj.getLeaderById = (leaderId) => {
     });
 };
 
+// ministryLeadersObj.getByMinistryId = (MinistryID) => {
+//     return new Promise((resolve, reject) => {
+//         pool.query('SELECT * FROM ministryleaders WHERE MinistryID = ?', [MinistryID], (err, results) => {
+//             if (err) return reject(err);
+//             return resolve(results);
+//         });
+//     });
+// };
+
 ministryLeadersObj.getByMinistryId = (MinistryID) => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT * FROM ministryleaders WHERE MinistryID = ?', [MinistryID], (err, results) => {
+        pool.query('SELECT ml.*, mm.Name, mm.Surname, mm.Email, mm.Phone, mm.Address FROM ministryleaders  ml JOIN members mm ON ml.LeaderID = mm.MemberID WHERE MinistryID = ?', [MinistryID], (err, results) => {
             if (err) return reject(err);
             return resolve(results);
         });
@@ -57,6 +66,15 @@ ministryLeadersObj.deleteLeader = (leaderId) => {
         pool.query('DELETE FROM ministryleaders WHERE MinistryLeaderID = ?', [leaderId], (err, results) => {
             if (err) return reject(err);
             return resolve({ status: '200', message: 'Ministry leader deleted successfully' });
+        });
+    });
+};
+
+ministryLeadersObj.deleteMinistryLeadersJoin = (memberId, ministryId) => {
+    return new Promise((resolve, reject) => {
+        pool.query('DELETE FROM ministryleaders WHERE LeaderID = ? AND MinistryID = ?', [memberId, ministryId], (err, results) => {
+            if (err) return reject(err);
+            return resolve({ status: '200', message: 'Member ministry deleted successfully' });
         });
     });
 };

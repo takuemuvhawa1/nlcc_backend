@@ -16,7 +16,7 @@ prayersObj.postPrayer = (MemberID, requestnotes) => {
 
 prayersObj.getPrayers = () => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT p.*, m.name, m.surname FROM prayers p JOIN members m ON m.MemberID = p.MemberID;', (err, results) => {
+        pool.query('SELECT p.*, m.name, m.surname FROM prayers p JOIN members m ON m.MemberID = p.MemberID ORDER BY id DESC', (err, results) => {
             if (err) return reject(err);
             return resolve(results);
         });

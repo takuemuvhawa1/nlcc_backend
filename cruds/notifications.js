@@ -124,7 +124,7 @@ notificationsObj.postNotification = (header, content, date, time, MemberID, mini
 
 notificationsObj.getNotifications = () => {
     return new Promise((resolve, reject) => {
-        pool.query(`SELECT * FROM notifications`, (err, results) => {
+        pool.query(`SELECT * FROM notifications ORDER BY id DESC`, (err, results) => {
             if (err) return reject(err);
             return resolve(results);
         });

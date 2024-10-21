@@ -27,7 +27,7 @@ eventsObj.postVolunteerTask = (eventId, task, requirements) => {
 
 eventsObj.getEvents = () => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT * FROM tblevents', (err, results) => {
+        pool.query('SELECT * FROM tblevents ORDER BY id DESC', (err, results) => {
             if (err) return reject(err);
             return resolve(results);
         });

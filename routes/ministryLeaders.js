@@ -68,4 +68,16 @@ ministryLeaderRouter.delete('/:id', async (req, res) => {
     }
 });
 
+ministryLeaderRouter.delete('/:memberId/:ministryId', async (req, res) => {
+    try {
+        const memberId = req.params.memberId;
+        const ministryId = req.params.ministryId;
+        const result = await ministryLeadersDbOperations.deleteMinistryLeadersJoin(memberId, ministryId);
+        res.json(result);
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
+    }
+});
+
 module.exports = ministryLeaderRouter;

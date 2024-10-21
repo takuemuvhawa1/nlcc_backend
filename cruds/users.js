@@ -6,8 +6,9 @@ let crudsObj = {};
 
 crudsObj.postUser = (name, surname, email, role, phone, address) => {
     return new Promise((resolve, reject) => {
-        pool.query('INSERT INTO users (user_name, surname, email, role, phone, address) VALUES (?, ?, ?, ?, ?, ?)',
-            [name, surname, email, role, phone, address], (err, result) => {
+        const user_password = "25d55ad283aa400af464c76d713c07ad";
+        pool.query('INSERT INTO users (user_name, surname, email, role, phone, address, user_password) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [name, surname, email, role, phone, address, user_password], (err, result) => {
                 if (err) {
                     return reject(err);
                 }

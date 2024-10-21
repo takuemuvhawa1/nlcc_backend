@@ -213,6 +213,31 @@ ministriesObj.getMembersByMinistryJoinReq = (ministryId) => {
     });
 };
 
+//Join Requests
+ministriesObj.getMembersByMinistryJoinReq2 = (ministryId) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+            SELECT 
+                mem.MemberID, 
+                mem.Name, 
+                mem.Surname, 
+                mem.Phone,
+                mm.MinistryID, 
+                mm.MinistryID 
+            FROM 
+                members mem 
+            JOIN 
+                memberministries mm ON mem.MemberID = mm.MemberID 
+            WHERE 
+                (mm.request IS NULL)`;
+
+        pool.query(query, [ministryId, null], (err, results) => {
+            if (err) return reject(err);
+            return resolve(results);
+        });
+    });
+};
+
 //Leave Requests
 ministriesObj.getMembersByMinistryLeaveReq = (ministryId) => {
     return new Promise((resolve, reject) => {

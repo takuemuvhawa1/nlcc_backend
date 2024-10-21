@@ -53,7 +53,7 @@ childrenObj.postChild = (parentID, name, surname, dob, relationship, gender) => 
     return new Promise((resolve, reject) => {
         pool.query(
             'INSERT INTO children(parentID, name, surname, dob, relationship, gender) VALUES (?, ?, ?, ?, ?, ?)', 
-            [parentID, name, surname, formattedDob, relationship, gender], 
+            [parentID, name, surname, dob, relationship, gender], 
             (err, result) => {
                 if (err) return reject(err);
                 return resolve({ status: '200', message: 'Child record added successfully' });

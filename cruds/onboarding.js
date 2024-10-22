@@ -46,7 +46,7 @@ crudsObj.searchMember = async (email) => {
 };
 
 //POST Member
-crudsObj.postMember = async (name, surname, email, phone, address, country, membershipStatus, gender, registerwith) => {
+crudsObj.postMember = async (name, surname, email, phone, address, country, gender, registerwith) => {
     return new Promise((resolve, reject) => {
         pool.query('SELECT Name, Surname FROM members WHERE Email = ?', [email], async (err, results) => {
             if (err) {
@@ -57,9 +57,11 @@ crudsObj.postMember = async (name, surname, email, phone, address, country, memb
                 return resolve({ status: '401', message: 'User already registered' });
             }
 
+            const memberStatus = "Active";
+
             // If email is not found, proceed to insert the new member
             pool.query('INSERT INTO members(Name, Surname, Email, Phone, Address, Country, MembershipStatus, Gender, registerwith) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', 
-            [name, surname, email, phone, address, country, membershipStatus, gender, registerwith], 
+            [name, surname, email, phone, address, country, memberStatus, gender, registerwith], 
             async (err, result) => {
                 if (err) {
                     return reject(err);

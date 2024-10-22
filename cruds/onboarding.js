@@ -65,21 +65,29 @@ crudsObj.postMember = async (name, surname, email, phone, address, country, gend
                 }
             }
 
+
+            let randNum = '';
+
+            for (let i = 1; i < 5; i++) {
+                randNum += (Math.floor(Math.random() * 10)).toString();
+            }
+
+
             const memberStatus = "Active";
 
             // If email is not found, proceed to insert the new member
-            pool.query('INSERT INTO members(Name, Surname, Email, Phone, Address, Country, MembershipStatus, Gender, registerwith) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', 
-            [name, surname, email, phone, address, country, memberStatus, gender, registerwith], 
+            pool.query('INSERT INTO members(Name, Surname, Email, Phone, Address, Country, MembershipStatus, Gender, registerwith , Otp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+            [name, surname, email, phone, address, country, memberStatus, gender, registerwith, randNum], 
             async (err, result) => {
                 if (err) {
                     return reject(err);
                 }
 
-                let randNum = '';
+                // let randNum = '';
 
-                for (let i = 1; i < 5; i++) {
-                    randNum += (Math.floor(Math.random() * 10)).toString();
-                }
+                // for (let i = 1; i < 5; i++) {
+                //     randNum += (Math.floor(Math.random() * 10)).toString();
+                // }
 
                 // Email to send OTP
                 const data = {

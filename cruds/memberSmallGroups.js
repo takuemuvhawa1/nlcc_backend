@@ -127,6 +127,8 @@ memberSmallGroupsObj.deleteMemberSmallGroup = (memberSmallGroupId) => {
 };
 
 memberSmallGroupsObj.deleteMemberSmallGroup2 = (id, cellID) => {
+    console.log(id)
+    console.log(cellID)
     return new Promise((resolve, reject) => {
         pool.query('DELETE FROM membersmallgroups WHERE MemberID = ? AND SmallGroupID = ?', [id, cellID], (err, results) => {
             if (err) return reject(err);

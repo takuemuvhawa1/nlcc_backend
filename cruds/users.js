@@ -13,7 +13,7 @@ crudsObj.postUser = (name, surname, email, role, phone, address) => {
                     return reject(err);
                 }
                 return resolve({ status: '200', message: 'User created successfully' });
-            });
+            }); 
     });
 };
 
@@ -90,8 +90,8 @@ crudsObj.getUserById = (userId) => {
 
 crudsObj.updateUser = (id, name, surname, email, password, role, phone, address) => {
     return new Promise((resolve, reject) => {
-        pool.query('UPDATE users SET user_name = ?, surname = ?, email = ?, user_password = ?, role = ?, phone = ?, address = ? WHERE user_id = ?',
-            [name, surname, email, password, role, phone, address, id], (err, result) => {
+        pool.query('UPDATE users SET user_name = ?, surname = ?, email = ?, phone = ?, address = ? WHERE user_id = ?',
+            [name, surname, email, phone, address, id], (err, result) => {
                 if (err) {
                     return reject(err);
                 }
@@ -99,6 +99,17 @@ crudsObj.updateUser = (id, name, surname, email, password, role, phone, address)
             });
     });
 };
+// crudsObj.updateUser = (id, name, surname, email, password, role, phone, address) => {
+//     return new Promise((resolve, reject) => {
+//         pool.query('UPDATE users SET user_name = ?, surname = ?, email = ?, user_password = ?, role = ?, phone = ?, address = ? WHERE user_id = ?',
+//             [name, surname, email, password, role, phone, address, id], (err, result) => {
+//                 if (err) {
+//                     return reject(err);
+//                 }
+//                 return resolve({ status: '200', message: 'User updated successfully' });
+//             });
+//     });
+// };
 
 crudsObj.deleteUser = (id) => {
     return new Promise((resolve, reject) => {

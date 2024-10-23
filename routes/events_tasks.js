@@ -13,9 +13,9 @@ eventTasksRouter.post('/', async (req, res) => {
         const eventId = eventResult.insertId;
 
         // Post each volunteer task associated with the event
-        for (const task of volunteertasks) {
-            await eventsDbOperations.postVolunteerTask(eventId, task.task, task.requirements);
-        }
+        // for (const task of volunteertasks) {
+        //     await eventsDbOperations.postVolunteerTask(eventId, task.task, task.requirements);
+        // }
 
         res.json({ status: '200', message: 'Event and tasks added successfully' });
     } catch (e) {

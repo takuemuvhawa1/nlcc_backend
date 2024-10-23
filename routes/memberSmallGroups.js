@@ -123,7 +123,7 @@ memberSmallGroupsRouter.delete('/:id/:cellID', async (req, res) => {
     try {
         const id = req.params.id;
         const cellID = req.params.cellID;
-        const result = await memberSmallGroupsDbOperations.deleteMemberSmallGroup2(id);
+        const result = await memberSmallGroupsDbOperations.deleteMemberSmallGroup2(id, cellID);
         res.json(result);
     } catch (e) {
         console.log(e);

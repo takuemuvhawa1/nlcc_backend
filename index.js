@@ -153,7 +153,7 @@ app.get('/file/:filename', (req, res) => {
 
   // Stream the file as the response
   res.sendFile(filePath);
-});
+}); 
 
 // Endpoint for downloading files
 app.get('/download/:filename', (req, res) => {

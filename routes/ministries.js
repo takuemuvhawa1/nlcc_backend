@@ -101,7 +101,8 @@ ministryRouter.get('/ministry/:memberId', async (req, res) => {
                     request: ministry.request,
                     joined: ministry.request === "Approved" && ministry.MemberID,
                     PendingLeave: ministry.request === "leave" && ministry.MemberID,
-                    pendingJoin: ministry.request === null,
+                    // pendingJoin: ministry.request === null && ministry.MemberID,
+                    pendingJoin: ministry.request === null && ministry.MemberID !== null,
                     leaderStatus: ministry.LeaderID == memberId,
                     leaders: []
                 };

@@ -241,7 +241,9 @@ crudsObj.setPassword = async (email, otp, password) => {
                 return resolve({ status: '401', message: 'Email not found' });
             }
 
-            pool.query('UPDATE members SET Password = ? WHERE email = ?', [password, email], async (err, results) => {
+            let membershipStatus = "Active";
+
+            pool.query('UPDATE members SET Password = ?, MembershipStatus = ? WHERE email = ?', [password, membershipStatus, email], async (err, results) => {
                 if (err) {
                     return reject(err);
                 }

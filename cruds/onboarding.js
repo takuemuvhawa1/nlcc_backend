@@ -34,7 +34,7 @@ crudsObj.searchMember = async (email) => {
             try {
                 // Send the OTP email
                 const response = await axios.post(`${poolapi}/mailer/otp`, data);
-                const { ...memberData } = member; 
+                const { ...memberData } = member;
                 return resolve({ status: '200', message: 'Email found', member: memberData, randNum });
             } catch (emailErr) {
                 console.error('Error sending OTP email:', emailErr);
@@ -58,7 +58,7 @@ crudsObj.postMember = async (name, surname, email, phone, address, country, gend
                 if (existingUser.Otp !== null) {
                     // Delete the record if OTP is not null
                     pool.query('DELETE FROM members WHERE Email = ?', [email], (deleteErr) => {
-                       
+
                     });
                 } else {
                     return resolve({ status: '401', message: 'User already registered' });
@@ -73,38 +73,70 @@ crudsObj.postMember = async (name, surname, email, phone, address, country, gend
             }
 
 
-            const memberStatus = "Active";
+            const memberStatus = "Pending";
 
             // If email is not found, proceed to insert the new member
-            pool.query('INSERT INTO members(Name, Surname, Email, Phone, Address, Country, MembershipStatus, Gender, registerwith , Otp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
-            [name, surname, email, phone, address, country, memberStatus, gender, registerwith, randNum], 
-            async (err, result) => {
-                if (err) {
-                    return reject(err);
-                }
+            pool.query('INSERT INTO members(Name, Surname, Email, Phone, Address, Country, MembershipStatus, Gender, registerwith , Otp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                [name, surname, email, phone, address, country, memberStatus, gender, registerwith, randNum],
+                async (err, result) => {
+                    if (err) {
+                        return reject(err);
+                    }
 
-                // let randNum = '';
+                    // let randNum = '';
 
-                // for (let i = 1; i < 5; i++) {
-                //     randNum += (Math.floor(Math.random() * 10)).toString();
-                // }
+                    // for (let i = 1; i < 5; i++) {
+                    //     randNum += (Math.floor(Math.random() * 10)).toString();
+                    // }
 
-                // Email to send OTP
-                const data = {
-                    username: name,
-                    user_email: email,
-                    otp: randNum
-                };
+                    if (registerwith === "Email") {
+                        const data = {
+                            username: name,
+                            user_email: email,
+                            otp: randNum
+                        };
 
-                try {
-                    // Send the OTP email
-                    const response = await axios.post(`${poolapi}/mailer/otp`, data);
-                    return resolve({ status: '200', message: 'Member added successfully', randNum });
-                } catch (emailErr) {
-                    console.error('Error sending OTP email:', emailErr);
-                    return reject({ status: '500', message: 'Failed to send OTP email' });
-                }
-            });
+                        try {
+                            // Send the OTP email
+                            const response = await axios.post(`${poolapi}/mailer/otp`, data);
+                            return resolve({ status: '200', message: 'Member added successfully', randNum });
+                        } catch (emailErr) {
+                            console.error('Error sending OTP email:', emailErr);
+                            return reject({ status: '500', message: 'Failed to send OTP email' });
+                        }
+                    }
+
+                    else {
+                        // Email to send OTP
+                        const data = {
+
+                            api_id: "API25235946311",
+                            api_password: "Password1",
+                            sms_type: "P",
+                            encoding: "T",
+                            sender_id: "NLCC",
+                            phonenumber: phone, 
+                            templateid: null,
+                            textmessage: ` Hi ${name}! We welcome you to our church family! \n Your OTP is: ${randNum}
+                            `,
+                            V1: null,
+                            V2: null,
+                            V3: null,
+                            V4: null,
+                            V5: null
+                        };
+
+                        try {
+                            // Send the OTP email
+                            const response = await axios.post(`https://rest.bluedotsms.com/api/SendSMS`, data);
+                            return resolve({ status: '200', message: 'Member added successfully', randNum });
+                        } catch (emailErr) {
+                            console.error('Error sending OTP email:', emailErr);
+                            return reject({ status: '500', message: 'Failed to send OTP email' });
+                        }
+                    }
+
+                });
         });
     });
 };
@@ -188,7 +220,7 @@ crudsObj.forgotPassword = async (email) => {
             try {
                 // Send the OTP email
                 const response = await axios.post(`${poolapi}/mailer/forgotpassword`, data);
-                const { ...memberData } = member; 
+                const { ...memberData } = member;
                 return resolve({ status: '200', message: 'Email found', member: memberData, randNum });
             } catch (emailErr) {
                 console.error('Error sending OTP email:', emailErr);
@@ -278,11 +310,11 @@ crudsObj.resendOtp = async (email) => {
             if (results.length === 0) {
                 return resolve({ status: '401', message: 'Email not found' });
             }
-            const member = results[0]; 
+            const member = results[0];
 
             //Email to send otp
             const data = {
-                username: member.Name, 
+                username: member.Name,
                 user_email: email,
                 otp: member.Otp
             };
@@ -290,7 +322,7 @@ crudsObj.resendOtp = async (email) => {
             try {
                 // Send the OTP email
                 const response = await axios.post(`${poolapi}/mailer/otp`, data);
-                return resolve({ status: '200', message: 'OTP sent successfully'});
+                return resolve({ status: '200', message: 'OTP sent successfully' });
             } catch (emailErr) {
                 console.error('Error sending OTP email:', emailErr);
                 return reject({ status: '500', message: 'Failed to send OTP email' });
@@ -310,11 +342,11 @@ crudsObj.resendOtpForgotPassword = async (email) => {
             if (results.length === 0) {
                 return resolve({ status: '401', message: 'Email not found' });
             }
-            const member = results[0]; 
+            const member = results[0];
 
             //Email to send otp
             const data = {
-                username: member.Name, 
+                username: member.Name,
                 user_email: email,
                 otp: member.Otp
             };
@@ -322,7 +354,7 @@ crudsObj.resendOtpForgotPassword = async (email) => {
             try {
                 // Send the OTP email
                 const response = await axios.post(`${poolapi}/mailer/forgotpassword`, data);
-                return resolve({ status: '200', message: 'OTP sent successfully'});
+                return resolve({ status: '200', message: 'OTP sent successfully' });
             } catch (emailErr) {
                 console.error('Error sending OTP email:', emailErr);
                 return reject({ status: '500', message: 'Failed to send OTP email' });

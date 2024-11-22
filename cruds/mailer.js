@@ -5,28 +5,17 @@ const nodemailer = require('nodemailer');
 const Imap = require('imap');
 const { simpleParser } = require('mailparser');
 
-// Gmail credentials
-const senderEmail = 'taku1muvhawa@gmail.com';
-const senderPassword = 'atubdnvsgenrueap'
+// HostGator credentials
+const senderEmail = 'admin@jabulanlm.co.zw';
+const senderPassword = '$$J4bul4@App$$';
 const subject = 'New Life Covenant';
 const bodyApplicationForm = '';
 
-// Determine which email service to use (Gmail or Titan Mail)
-const emailService = process.env.EMAIL_SERVICE || 'gmail'; 
-
-let smtpServer, smtpPort, imapServer, imapPort;
-
-if (emailService === 'gmail') {
-    smtpServer = 'smtp.gmail.com';
-    smtpPort = 587;
-    imapServer = 'imap.gmail.com';
-    imapPort = 993;
-} else {
-    smtpServer = 'smtp.titan.email';
-    smtpPort = 587;
-    imapServer = 'imap.titan.email';
-    imapPort = 993;
-}
+// HostGator SMTP settings
+const smtpServer = 'mail.jabulanlm.co.zw'; // HostGator SMTP server
+const smtpPort = 465; // Use 465 for SSL
+const imapServer = 'mail.jabulanlm.co.zw'; // HostGator IMAP server
+const imapPort = 993; // IMAP port
 
 const crudsObj = {};
 
@@ -57,13 +46,13 @@ crudsObj.sendOtpEmail = (username, user_email, otp) => {
             const transporter = nodemailer.createTransport({
                 host: smtpServer,
                 port: smtpPort,
-                secure: false, 
+                secure: true, // Use true for 465 port
                 auth: {
                     user: senderEmail,
                     pass: senderPassword,
                 },
                 tls: {
-                    rejectUnauthorized: false 
+                    rejectUnauthorized: false
                 }
             });
 
@@ -110,13 +99,13 @@ crudsObj.sendOtpEmailForgotPass = (username, user_email, otp) => {
             const transporter = nodemailer.createTransport({
                 host: smtpServer,
                 port: smtpPort,
-                secure: false, 
+                secure: true, // Use true for 465 port
                 auth: {
                     user: senderEmail,
                     pass: senderPassword,
                 },
                 tls: {
-                    rejectUnauthorized: false 
+                    rejectUnauthorized: false
                 }
             });
 

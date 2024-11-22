@@ -22,6 +22,7 @@ onBoardingRouter.post('/searchmember', async (req, res) => {
 onBoardingRouter.post('/member', async (req, res) => {
     try {
         const postedValues = req.body;
+        console.log(postedValues);
         const results = await onBoardingDbOperations.postMember(postedValues.name, postedValues.surname, postedValues.email, postedValues.phone, postedValues.address, postedValues.country, postedValues.gender, postedValues.registerwith);
         res.json(results);
     } catch (e) {
@@ -29,7 +30,6 @@ onBoardingRouter.post('/member', async (req, res) => {
         res.sendStatus(500);
     }
 });
-
 
 onBoardingRouter.post('/forgotpassword', async (req, res) => {
     try {

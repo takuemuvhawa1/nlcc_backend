@@ -218,7 +218,7 @@ crudsObj.forgotPassword = async (email, phone) => {
                 otp: randNum
             };
 
-            if (sendwith = "Email") {
+            if (sendwith === "Email") {
                 try {
                     // Send the OTP email
                     const response = await axios.post(`${poolapi}/mailer/forgotpassword`, data);
@@ -419,7 +419,7 @@ crudsObj.resendOtpForgotPassword = async (email, phone) => {
                 otp: member.Otp
             };
 
-            if(sendwith = "Email"){
+            if(sendwith === "Email"){
                 try {
                     // Send the OTP email
                     const response = await axios.post(`${poolapi}/mailer/forgotpassword`, data);

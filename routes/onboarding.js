@@ -33,8 +33,8 @@ onBoardingRouter.post('/member', async (req, res) => {
 
 onBoardingRouter.post('/forgotpassword', async (req, res) => {
     try {
-        const { email } = req.body;
-        let result = await onBoardingDbOperations.forgotPassword(email);
+        const { email, phone } = req.body;
+        let result = await onBoardingDbOperations.forgotPassword(email, phone);
         res.status(result.status).json(result);
     } catch (e) {
         console.log(e); 
@@ -44,12 +44,12 @@ onBoardingRouter.post('/forgotpassword', async (req, res) => {
 
 onBoardingRouter.post('/setpassword', async (req, res) => {
     try {
-        const { email, otp, password } = req.body;
+        const { email, otp, password, registerwith, phone } = req.body;
 
             // Hash the password using MD5
             const hashedPassword = crypto.createHash('md5').update(password).digest('hex');
 
-        let result = await onBoardingDbOperations.setPassword(email, otp, hashedPassword);
+        let result = await onBoardingDbOperations.setPassword(email, otp, hashedPassword, registerwith, phone);
         res.status(result.status).json(result);
     } catch (e) {
         console.log(e);
@@ -60,13 +60,13 @@ onBoardingRouter.post('/setpassword', async (req, res) => {
 
 onBoardingRouter.post('/resetpassword', async (req, res) => {
     try {
-        const { email, oldPassword, newPassword } = req.body; 
+        const { email, oldPassword, newPassword, phone } = req.body; 
 
          // Hash the password using MD5
          const hashedOldPassword = crypto.createHash('md5').update(oldPassword).digest('hex');
          const hashedPassword = crypto.createHash('md5').update(newPassword).digest('hex');
 
-        let result = await onBoardingDbOperations.resetPassword(email, hashedOldPassword, hashedPassword);
+        let result = await onBoardingDbOperations.resetPassword(email, hashedOldPassword, hashedPassword, phone);
         res.status(result.status).json(result);
     } catch (e) {
         console.log(e);
@@ -77,8 +77,8 @@ onBoardingRouter.post('/resetpassword', async (req, res) => {
 
 onBoardingRouter.post('/resendotp', async (req, res) => {
     try {
-        const { email } = req.body;
-        let result = await onBoardingDbOperations.resendOtp(email);
+        const { email, phone } = req.body;
+        let result = await onBoardingDbOperations.resendOtp(email, phone);
         res.status(result.status).json(result);
     } catch (e) {
         console.log(e);
@@ -88,8 +88,8 @@ onBoardingRouter.post('/resendotp', async (req, res) => {
 
 onBoardingRouter.post('/forgotpassword/resendotp', async (req, res) => {
     try {
-        const { email } = req.body;
-        let result = await onBoardingDbOperations.resendOtpForgotPassword(email);
+        const { email, phone } = req.body;
+        let result = await onBoardingDbOperations.resendOtpForgotPassword(email, phone);
         res.status(result.status).json(result);
     } catch (e) {
         console.log(e);
@@ -115,11 +115,11 @@ onBoardingRouter.post('/forgotpassword/resendotp', async (req, res) => {
 // Login 
 onBoardingRouter.post('/signin', async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, phone } = req.body;
 
         const hashedPassword = crypto.createHash('md5').update(password).digest('hex');
 
-        let result = await onBoardingDbOperations.signIn(email, hashedPassword);
+        let result = await onBoardingDbOperations.signIn(email, hashedPassword, phone);
 
         if (result.status === '200') {
             const memberId = result.member.MemberID; 

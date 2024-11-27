@@ -463,9 +463,9 @@ crudsObj.resendOtpForgotPassword = async (email, phone) => {
 };
 
 //Login
-crudsObj.signIn = async (email, password, phone) => {
+crudsObj.signIn = async (email, password) => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT * FROM members WHERE (email = ? OR Phone = ?) AND Password = ?', [email, phone, password], async (err, results) => {
+        pool.query('SELECT * FROM members WHERE (email = ? OR Phone = ?) AND Password = ?', [email, email, password], async (err, results) => {
             if (err) {
                 return reject(err);
             }

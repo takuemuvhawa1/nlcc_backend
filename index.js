@@ -2,8 +2,9 @@ const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
 const https = require('https');
+const { Expo } = require('expo-server-sdk'); // Import Expo SDK
 
-const membersDbOperations = require('./cruds/member'); 
+const membersDbOperations = require('./cruds/member');
 
 // Auth
 const authenticateToken = require('./utilities/authenticateToken');
@@ -88,6 +89,76 @@ app.use('/notification-reci', notificationRecipientsRouter);
 app.use('/sermons', sermonsRouter);
 app.use('/prayer-req', prayersRouter);
 
+// app.use('/users', userRouter);
+// app.use('/members', authenticateToken, memberRouter);
+// app.use('/children', authenticateToken, childrenRouter);
+// app.use('/families', authenticateToken, familyRouter);
+// app.use('/memberfamily', authenticateToken, memberFamilyRouter);
+// app.use('/attendance', authenticateToken, attendanceRouter);
+// app.use('/contributions', authenticateToken, contributionRouter);
+// app.use('/donations', authenticateToken, donationsRouter);
+// app.use('/pledges', authenticateToken, pledgeRouter);
+// app.use('/eventreg', authenticateToken, eventRegistrationRouter);
+// app.use('/events', authenticateToken, eventRouter);
+// app.use('/events-tasks', authenticateToken, eventTasksRouter);
+// app.use('/volunteer-tasks', authenticateToken, volunteerTasksRouter);
+// app.use('/volunteeropp', authenticateToken, volunteerOpportunityRouter);
+// app.use('/volunteersignup', authenticateToken, volunteerSignupRouter);
+// app.use('/volattendance', authenticateToken, volunteerSignupAttendanceRouter);
+// app.use('/ministries', authenticateToken, ministryRouter);
+// app.use('/ministryleaders', authenticateToken, ministryLeaderRouter);
+// app.use('/ministrymembers', authenticateToken, memberMinistryRouter);
+// app.use('/smallgroups', authenticateToken, smallGroupsRouter);
+// app.use('/smallgroupleaders', authenticateToken, smallGroupLeadersRouter);
+// app.use('/membersmallgrp', authenticateToken, memberSmallGroupsRouter);
+// app.use('/regatt', authenticateToken, regAttendanceRouter);
+// app.use('/projects', authenticateToken, projectsRouter);
+// app.use('/mailer', mailerRouter);
+// app.use('/onboarding', onBoardingRouter);
+// app.use('/notifications', authenticateToken, notificationsRouter);
+// app.use('/notification-reci', authenticateToken, notificationRecipientsRouter);
+// app.use('/sermons', authenticateToken, sermonsRouter);
+// app.use('/prayer-req', authenticateToken, prayersRouter);
+
+// Push Notification Route
+app.post('/send-notification', async (req, res) => {
+  const { tokens, title, body } = req.body;
+  let expo = new Expo();
+
+  // Create messages for each token
+  let messages = [];
+  for (let pushToken of tokens) {
+    // Check if the token is valid
+    if (!Expo.isExpoPushToken(pushToken)) {
+      console.error(`Invalid push token: ${pushToken}`);
+      continue;
+    }
+    messages.push({
+      to: pushToken,
+      sound: 'default',
+      title: title,
+      body: body,
+      data: { withSome: 'data' },
+    });
+  }
+
+  // Send notifications
+  let chunks = expo.chunkPushNotifications(messages);
+  (async () => {
+    for (let chunk of chunks) {
+      try {
+        let receipts = await expo.sendPushNotificationsAsync(chunk);
+        console.log(receipts);
+        res.status(200).send('Notifications sent successfully.');
+      } catch (error) {
+        console.error(error);
+        res.status(500).send('Error sending notifications.');
+      }
+    }
+  })();
+});
+
+
 //FILE UPLOADS
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -118,26 +189,26 @@ app.post('/upload', upload.single('file'), (req, res) => {
 //Upload profile pic
 app.post('/upload/:id', upload.single('file'), async (req, res) => {
   if (!req.file) {
-      return res.status(400).send('No file uploaded.');
+    return res.status(400).send('No file uploaded.');
   }
 
   const uploadedFilename = req.file.filename;
   console.log('File uploaded:', uploadedFilename);
 
   try {
-      const id = req.params.id;
-      const updatedValues = { ProfilePicture: `${pool}/file/`+ uploadedFilename }; 
-      // console.log("id: ", id);
-      // console.log("ProfilePicture: ", uploadedFilename);
-      const result = await membersDbOperations.updateMemberProfilePic(id, updatedValues.ProfilePicture);
+    const id = req.params.id;
+    const updatedValues = { ProfilePicture: `${pool}/file/` + uploadedFilename };
+    // console.log("id: ", id);
+    // console.log("ProfilePicture: ", uploadedFilename);
+    const result = await membersDbOperations.updateMemberProfilePic(id, updatedValues.ProfilePicture);
 
-      res.status(200).json({
-          Filename: `${pool}/file/${uploadedFilename}`,
-          result: result
-      });
+    res.status(200).json({
+      Filename: `${pool}/file/${uploadedFilename}`,
+      result: result
+    });
   } catch (e) {
-      console.log(e);
-      res.sendStatus(500);
+    console.log(e);
+    res.sendStatus(500);
   }
 });
 
@@ -153,16 +224,16 @@ app.get('/file/:filename', (req, res) => {
 
   // Stream the file as the response
   res.sendFile(filePath);
-}); 
+});
 
 // Endpoint for downloading files
 app.get('/download/:filename', (req, res) => {
   const filename = req.params.filename;
-  const filePath = path.join(__dirname, 'uploads', filename); 
+  const filePath = path.join(__dirname, 'uploads', filename);
 
   res.download(filePath, (err) => {
     if (err) {
-      console.error('Error downloading file:', err); 
+      console.error('Error downloading file:', err);
       res.status(404).send('File not found.');
     }
   });
@@ -177,7 +248,19 @@ app.get('/download/:filename', (req, res) => {
 //   console.log('app is listening to port' + process.env.APPPORT);
 // });
 
+// Load SSL certificates
+// const options = {
+//   key: fs.readFileSync('/etc/letsencrypt/live/srv702611.hstgr.cloud/privkey.pem'),
+//   cert: fs.readFileSync('/etc/letsencrypt/live/srv702611.hstgr.cloud/fullchain.pem')
+// };
 
+// // Create HTTPS server
+// const PORT = process.env.APPPORT || '3003';
+// https.createServer(options, app).listen(PORT, () => {
+//   console.log(`App is listening on https://srv702611.hstgr.cloud:${PORT}`);
+// });
+
+// Local Server
 app.listen(process.env.APPPORT || '3003', () => {
   console.log('app is listening to port' + process.env.APPPORT);
 });

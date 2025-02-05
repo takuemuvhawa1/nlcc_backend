@@ -65,6 +65,7 @@ childrenRouter.put('/:id', async (req, res) => {
 
 // Delete child by ID
 childrenRouter.delete('/:id', async (req, res) => {
+    console.log('POINT DELETE REACHED')
     try {
         const id = req.params.id;
         const result = await childrenDbOperations.deleteChild(id);

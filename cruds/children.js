@@ -105,7 +105,7 @@ childrenObj.updateChild = (childID, parentID, name, surname, dob, relationship, 
 childrenObj.deleteChild = (childId) => {
     return new Promise((resolve, reject) => {
         pool.query('DELETE FROM children WHERE childID = ?', [childId], (err, results) => {
-            if (err) return reject(err);
+            if (err) return reject(err); 
             return resolve({ status: '200', message: 'Child record deleted successfully' });
         });
     });

@@ -1,6 +1,6 @@
 const express = require('express');
 const userRouter = express.Router();
-const usersDbOperations = require('../cruds/users'); 
+const usersDbOperations = require('../cruds/users');
 
 const crypto = require('crypto');
 
@@ -22,11 +22,11 @@ userRouter.post('/', async (req, res) => {
 
 userRouter.post('/resetpassword', async (req, res) => {
     try {
-        const { email, oldPassword, newPassword } = req.body; 
+        const { email, oldPassword, newPassword } = req.body;
 
-         // Hash the password using MD5
-         const hashedOldPassword = crypto.createHash('md5').update(oldPassword).digest('hex');
-         const hashedPassword = crypto.createHash('md5').update(newPassword).digest('hex');
+        // Hash the password using MD5
+        const hashedOldPassword = crypto.createHash('md5').update(oldPassword).digest('hex');
+        const hashedPassword = crypto.createHash('md5').update(newPassword).digest('hex');
 
         let result = await usersDbOperations.resetPassword(email, hashedOldPassword, hashedPassword);
         res.status(result.status).json(result);
@@ -47,12 +47,15 @@ userRouter.post('/login', async (req, res) => {
             return res.status(401).send('Invalid credentials');
         }
 
-        //  // Generate JWT token
-        //  const token = generateToken(result); 
-        //  console.log('TOKEN: ', token);
- 
-        //  // Send user data and token in one response
+        // Generate JWT token
+        const token = generateToken(result);
+        console.log('TOKEN: ', token);
+
+        // Send user data and token in one response
         //  res.json({ result: result, token });
+
+        // Add the token to the result object
+        result.token = token; // Add the token as a new property to the result object
 
         res.status(result.status).json(result);
     } catch (e) {
@@ -93,7 +96,7 @@ userRouter.put('/:id', async (req, res) => {
         res.json(result);
     } catch (e) {
         console.log(e);
-        res.sendStatus(500); 
+        res.sendStatus(500);
     }
 });
 

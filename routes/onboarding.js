@@ -33,8 +33,8 @@ onBoardingRouter.post('/member', async (req, res) => {
 
 onBoardingRouter.post('/forgotpassword', async (req, res) => {
     try {
-        const { email, phone } = req.body;
-        let result = await onBoardingDbOperations.forgotPassword(email, phone);
+        const { email } = req.body;
+        let result = await onBoardingDbOperations.forgotPassword(email);
         res.status(result.status).json(result);
     } catch (e) {
         console.log(e); 
@@ -44,12 +44,12 @@ onBoardingRouter.post('/forgotpassword', async (req, res) => {
 
 onBoardingRouter.post('/setpassword', async (req, res) => {
     try {
-        const { email, otp, password, registerwith, phone } = req.body;
+        const { phonemail, otp, password, registerwith } = req.body;
 
             // Hash the password using MD5
             const hashedPassword = crypto.createHash('md5').update(password).digest('hex');
 
-        let result = await onBoardingDbOperations.setPassword(email, otp, hashedPassword, registerwith, phone);
+        let result = await onBoardingDbOperations.setPassword(phonemail, otp, hashedPassword, registerwith);
         res.status(result.status).json(result);
     } catch (e) {
         console.log(e);

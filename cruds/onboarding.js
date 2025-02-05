@@ -48,6 +48,7 @@ crudsObj.searchMember = async (email) => {
 //POST Member
 crudsObj.postMember = async (name, surname, email, phone, address, country, gender, registerwith) => {
     return new Promise((resolve, reject) => {
+        console.log(name, surname, email, phone, address, country, gender, registerwith)
         pool.query('SELECT Name, Surname, Otp FROM members WHERE Email = ?', [email], async (err, results) => {
             if (err) {
                 return reject(err);
@@ -191,9 +192,9 @@ crudsObj.postMember = async (name, surname, email, phone, address, country, gend
 
 //Forgot password
 
-crudsObj.forgotPassword = async (email, phone) => {
+crudsObj.forgotPassword = async (email) => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT Name, Surname FROM members WHERE email = ? OR Phone = ?', [email, phone], async (err, results) => {
+        pool.query('SELECT Name, Surname FROM members WHERE email = ? OR Phone = ?', [email, email], async (err, results) => {
             if (err) {
                 return reject(err);
             }
@@ -209,7 +210,7 @@ crudsObj.forgotPassword = async (email, phone) => {
                 randNum += (Math.floor(Math.random() * 10)).toString();
             }
 
-            pool.query('UPDATE members SET Otp = ? WHERE email = ? OR Phone = ?', [randNum, email, phone])
+            pool.query('UPDATE members SET Otp = ? WHERE email = ? OR Phone = ?', [randNum, email, email])
 
             //Email to send otp
             const data = {
@@ -221,7 +222,7 @@ crudsObj.forgotPassword = async (email, phone) => {
             if (sendwith === "Email") {
                 try {
                     // Send the OTP email
-                    const response = await axios.post(`${poolapi}/mailer/forgotpassword`, data);
+                    const response = axios.post(`${poolapi}/mailer/forgotpassword`, data);
                     const { ...memberData } = member;
                     return resolve({ status: '200', message: 'Email found', member: memberData, randNum });
                 } catch (emailErr) {
@@ -239,7 +240,7 @@ crudsObj.forgotPassword = async (email, phone) => {
                     sender_id: "NLCC",
                     phonenumber: phone,
                     templateid: null,
-                    textmessage: `Your OTP is: ${otp}
+                    textmessage: `Your OTP is: ${randNum}
                     `,
                     V1: null,
                     V2: null,
@@ -250,7 +251,7 @@ crudsObj.forgotPassword = async (email, phone) => {
 
                 try {
                     // Send the OTP email
-                    const response = await axios.post(`https://rest.bluedotsms.com/api/SendSMS`, data);
+                    const response = axios.post(`https://rest.bluedotsms.com/api/SendSMS`, data);
                     const { ...memberData } = member;
                     return resolve({ status: '200', message: 'Email found', member: memberData, randNum });
                 } catch (emailErr) {
@@ -264,9 +265,9 @@ crudsObj.forgotPassword = async (email, phone) => {
     });
 };
 
-crudsObj.setPassword = async (email, otp, password, registerwith, phone) => {
+crudsObj.setPassword = async (phonemail, otp, password, registerwith) => {
     return new Promise((resolve, reject) => {
-        pool.query('SELECT Name, Surname FROM members WHERE email = ? OR Phone = ?', [email, phone], async (err, results) => {
+        pool.query('SELECT Name, Surname FROM members WHERE email = ? OR Phone = ?', [phonemail, phonemail], async (err, results) => {
             if (err) {
                 return reject(err);
             }
@@ -276,14 +277,14 @@ crudsObj.setPassword = async (email, otp, password, registerwith, phone) => {
 
             let membershipStatus = "Active";
 
-            pool.query('UPDATE members SET Password = ?, MembershipStatus = ? WHERE email = ? OR Phone = ?', [password, membershipStatus, email, phone], async (err, results) => {
+            pool.query('UPDATE members SET Password = ?, MembershipStatus = ? WHERE email = ? OR Phone = ?', [password, membershipStatus, phonemail, phonemail], async (err, results) => {
                 if (err) {
                     return reject(err);
                 }
 
-                pool.query('UPDATE members SET Otp = ? WHERE email = ? OR Phone = ?', [null, email, phone])
+                pool.query('UPDATE members SET Otp = ? WHERE email = ? OR Phone = ?', [null, phonemail, phonemail])
 
-                pool.query('SELECT * FROM members WHERE email = ? OR phone = ?', [email, phone], async (err, results) => {
+                pool.query('SELECT * FROM members WHERE email = ? OR phone = ?', [phonemail, phonemail], async (err, results) => {
                     if (err) {
                         return reject(err);
                     }
@@ -358,7 +359,7 @@ crudsObj.resendOtp = async (email, phone) => {
 
                 try {
                     // Send the OTP email
-                    const response = await axios.post(`${poolapi}/mailer/otp`, data);
+                    const response = axios.post(`${poolapi}/mailer/otp`, data);
                     return resolve({ status: '200', message: 'OTP sent successfully' });
                 } catch (emailErr) {
                     console.error('Error sending OTP email:', emailErr);
@@ -386,7 +387,7 @@ crudsObj.resendOtp = async (email, phone) => {
 
                 try {
                     // Send the OTP email
-                    const response = await axios.post(`https://rest.bluedotsms.com/api/SendSMS`, data);
+                    const response = axios.post(`https://rest.bluedotsms.com/api/SendSMS`, data);
                     return resolve({ status: '200', message: 'OTP sent successfully' });
                 } catch (emailErr) {
                     console.error('Error sending OTP email:', emailErr);
@@ -422,7 +423,7 @@ crudsObj.resendOtpForgotPassword = async (email, phone) => {
             if(sendwith === "Email"){
                 try {
                     // Send the OTP email
-                    const response = await axios.post(`${poolapi}/mailer/forgotpassword`, data);
+                    const response = axios.post(`${poolapi}/mailer/forgotpassword`, data);
                     return resolve({ status: '200', message: 'OTP sent successfully' });
                 } catch (emailErr) {
                     console.error('Error sending OTP email:', emailErr);
@@ -450,7 +451,7 @@ crudsObj.resendOtpForgotPassword = async (email, phone) => {
 
                 try {
                     // Send the OTP email
-                    const response = await axios.post(`https://rest.bluedotsms.com/api/SendSMS`, data);
+                    const response = axios.post(`https://rest.bluedotsms.com/api/SendSMS`, data);
                     return resolve({ status: '200', message: 'OTP sent successfully' });
                 } catch (emailErr) {
                     console.error('Error sending OTP email:', emailErr);

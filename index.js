@@ -249,18 +249,18 @@ app.get('/download/:filename', (req, res) => {
 // });
 
 // Load SSL certificates
-// const options = {
-//   key: fs.readFileSync('/etc/letsencrypt/live/srv702611.hstgr.cloud/privkey.pem'),
-//   cert: fs.readFileSync('/etc/letsencrypt/live/srv702611.hstgr.cloud/fullchain.pem')
-// };
+const options = {
+  key: fs.readFileSync('/etc/letsencrypt/live/srv702611.hstgr.cloud/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/srv702611.hstgr.cloud/fullchain.pem')
+};
 
-// // Create HTTPS server
-// const PORT = process.env.APPPORT || '3003';
-// https.createServer(options, app).listen(PORT, () => {
-//   console.log(`App is listening on https://srv702611.hstgr.cloud:${PORT}`);
-// });
-
-// Local Server
-app.listen(process.env.APPPORT || '3003', () => {
-  console.log('app is listening to port' + process.env.APPPORT);
+// Create HTTPS server
+const PORT = process.env.APPPORT || '3003';
+https.createServer(options, app).listen(PORT, () => {
+  console.log(`App is listening on https://srv702611.hstgr.cloud:${PORT}`);
 });
+
+// // Local Server
+// app.listen(process.env.APPPORT || '3003', () => {
+//   console.log('app is listening to port' + process.env.APPPORT);
+// });

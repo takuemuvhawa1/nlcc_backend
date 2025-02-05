@@ -260,6 +260,20 @@ https.createServer(options, app).listen(PORT, () => {
   console.log(`App is listening on https://srv702611.hstgr.cloud:${PORT}`);
 });
 
+// Optional: Redirect HTTP traffic to HTTPS
+const http = require('http');
+const httpPort = 3000;
+
+const httpServer = http.createServer((req, res) => {
+  res.writeHead(301, { "Location": `https://${req.headers.host}${req.url}` });
+  res.end();
+});
+
+httpServer.listen(httpPort, () => {
+  console.log(`HTTP server running on http://srv702611.hstgr.cloud:${httpPort}`);
+});
+
+
 // // Local Server
 // app.listen(process.env.APPPORT || '3003', () => {
 //   console.log('app is listening to port' + process.env.APPPORT);

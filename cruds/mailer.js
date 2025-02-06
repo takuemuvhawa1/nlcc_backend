@@ -144,8 +144,8 @@ const subject = 'New Life Covenant';
 const bodyApplicationForm = '';
 
 // HostGator SMTP settings
-const smtpServer = 'mail.jabulanlm.co.zw'; // HostGator SMTP server
-const smtpPort = 465; // Use 465 for SSL
+const smtpServer = process.env.SMTP_SERVER;
+const smtpPort = process.env.SMTP_PORT;
 
 const crudsObj = {};
 

@@ -239,42 +239,33 @@ app.get('/download/:filename', (req, res) => {
   });
 });
 
+// // Load SSL certificates
 // const options = {
-//   cert: fs.readFileSync(`${process.env.HOME}/cert/cert.pem`),
-//   key: fs.readFileSync(`${process.env.HOME}/cert/key.pem`)
+//   key: fs.readFileSync('/etc/letsencrypt/live/srv702611.hstgr.cloud/privkey.pem'),
+//   cert: fs.readFileSync('/etc/letsencrypt/live/srv702611.hstgr.cloud/fullchain.pem')
 // };
 
-// https.createServer(options, app).listen(process.env.APPPORT || '3003', () => {
-//   console.log('app is listening to port' + process.env.APPPORT);
+// // Create HTTPS server
+// const PORT = process.env.APPPORT || '3003';
+// https.createServer(options, app).listen(PORT, () => {
+//   console.log(`App is listening on https://srv702611.hstgr.cloud:${PORT}`);
 // });
 
-// Load SSL certificates
-const options = {
-  key: fs.readFileSync('/etc/letsencrypt/live/srv702611.hstgr.cloud/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/srv702611.hstgr.cloud/fullchain.pem')
-};
+// // Optional: Redirect HTTP traffic to HTTPS
+// const http = require('http');
+// const httpPort = 3000;
 
-// Create HTTPS server
-const PORT = process.env.APPPORT || '3003';
-https.createServer(options, app).listen(PORT, () => {
-  console.log(`App is listening on https://srv702611.hstgr.cloud:${PORT}`);
-});
-
-// Optional: Redirect HTTP traffic to HTTPS
-const http = require('http');
-const httpPort = 3000;
-
-const httpServer = http.createServer((req, res) => {
-  res.writeHead(301, { "Location": `https://${req.headers.host}${req.url}` });
-  res.end();
-});
-
-httpServer.listen(httpPort, () => {
-  console.log(`HTTP server running on http://srv702611.hstgr.cloud:${httpPort}`);
-});
-
-
-// // Local Server
-// app.listen(process.env.APPPORT || '3003', () => {
-//   console.log('app is listening to port' + process.env.APPPORT);
+// const httpServer = http.createServer((req, res) => {
+//   res.writeHead(301, { "Location": `https://${req.headers.host}${req.url}` });
+//   res.end();
 // });
+
+// httpServer.listen(httpPort, () => {
+//   console.log(`HTTP server running on http://srv702611.hstgr.cloud:${httpPort}`);
+// });
+
+
+// Local Server
+app.listen(process.env.APPPORT || '3003', () => {
+  console.log('app is listening to port' + process.env.APPPORT);
+});

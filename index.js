@@ -120,42 +120,40 @@ app.use('/prayer-req', prayersRouter);
 // app.use('/sermons', authenticateToken, sermonsRouter);
 // app.use('/prayer-req', authenticateToken, prayersRouter);
 
-// Push Notification Route
+// Endpoint to send push notifications
 app.post('/send-notification', async (req, res) => {
-  const { tokens, title, body } = req.body;
-  let expo = new Expo();
+  const { expoPushToken } = req.body; // Ensure you send the token in the request body
 
-  // Create messages for each token
-  let messages = [];
-  for (let pushToken of tokens) {
-    // Check if the token is valid
-    if (!Expo.isExpoPushToken(pushToken)) {
-      console.error(`Invalid push token: ${pushToken}`);
-      continue;
-    }
-    messages.push({
-      to: pushToken,
-      sound: 'default',
-      title: title,
-      body: body,
-      data: { withSome: 'data' },
+  const message = {
+    to: expoPushToken,
+    sound: 'default',
+    title: 'NLCC',
+    body: 'New Life Covanant!',
+    data: { someData: 'goes here' },
+  };
+
+  try {
+    const response = await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Accept-Encoding': 'gzip, deflate',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(message),
     });
-  }
 
-  // Send notifications
-  let chunks = expo.chunkPushNotifications(messages);
-  (async () => {
-    for (let chunk of chunks) {
-      try {
-        let receipts = await expo.sendPushNotificationsAsync(chunk);
-        console.log(receipts);
-        res.status(200).send('Notifications sent successfully.');
-      } catch (error) {
-        console.error(error);
-        res.status(500).send('Error sending notifications.');
-      }
+    const data = await response.json();
+
+    if (response.ok) {
+      return res.status(200).send(data);
+    } else {
+      return res.status(response.status).send(data);
     }
-  })();
+  } catch (error) {
+    console.error('Error sending notification:', error);
+    return res.status(500).send({ error: 'Failed to send notification' });
+  }
 });
 
 

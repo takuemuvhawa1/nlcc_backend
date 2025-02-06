@@ -115,11 +115,11 @@ onBoardingRouter.post('/forgotpassword/resendotp', async (req, res) => {
 // Login 
 onBoardingRouter.post('/signin', async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, pushtoken } = req.body;
 
         const hashedPassword = crypto.createHash('md5').update(password).digest('hex');
 
-        let result = await onBoardingDbOperations.signIn(email, hashedPassword);
+        let result = await onBoardingDbOperations.signIn(email, hashedPassword, pushtoken);
 
         if (result.status === '200') {
             const memberId = result.member.MemberID; 

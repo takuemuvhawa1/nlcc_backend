@@ -237,17 +237,17 @@ app.get('/download/:filename', (req, res) => {
   });
 });
 
-// // Load SSL certificates
-// const options = {
-//   key: fs.readFileSync('/etc/letsencrypt/live/srv702611.hstgr.cloud/privkey.pem'),
-//   cert: fs.readFileSync('/etc/letsencrypt/live/srv702611.hstgr.cloud/fullchain.pem')
-// };
+// Load SSL certificates
+const options = {
+  key: fs.readFileSync('/etc/letsencrypt/live/srv702611.hstgr.cloud/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/srv702611.hstgr.cloud/fullchain.pem')
+};
 
-// // Create HTTPS server
-// const PORT = process.env.APPPORT || '3003';
-// https.createServer(options, app).listen(PORT, () => {
-//   console.log(`App is listening on https://srv702611.hstgr.cloud:${PORT}`);
-// });
+// Create HTTPS server
+const PORT = process.env.APPPORT || '3003';
+https.createServer(options, app).listen(PORT, () => {
+  console.log(`App is listening on https://srv702611.hstgr.cloud:${PORT}`);
+});
 
 // // Optional: Redirect HTTP traffic to HTTPS
 // const http = require('http');
@@ -258,12 +258,12 @@ app.get('/download/:filename', (req, res) => {
 //   res.end();
 // });
 
-// httpServer.listen(httpPort, () => {
-//   console.log(`HTTP server running on http://srv702611.hstgr.cloud:${httpPort}`);
-// });
-
-
-// Local Server
-app.listen(process.env.APPPORT || '3003', () => {
-  console.log('app is listening to port' + process.env.APPPORT);
+httpServer.listen(httpPort, () => {
+  console.log(`HTTP server running on http://srv702611.hstgr.cloud:${httpPort}`);
 });
+
+
+// // Local Server
+// app.listen(process.env.APPPORT || '3003', () => {
+//   console.log('app is listening to port' + process.env.APPPORT);
+// });

@@ -416,7 +416,7 @@ crudsObj.resendOtpForgotPassword = async (email, phone) => {
 };
 
 //Login
-crudsObj.signIn = async (email, password) => {
+crudsObj.signIn = async (email, password, pushtoken) => {
     return new Promise((resolve, reject) => {
         pool.query('SELECT * FROM members WHERE (email = ? OR Phone = ?) AND Password = ?', [email, email, password], async (err, results) => {
             if (err) {
@@ -426,6 +426,8 @@ crudsObj.signIn = async (email, password) => {
                 return resolve({ status: '401', message: 'Invalid email or password' });
             }
             const member = results[0];
+
+            pool.query('UPDATE members SET pushtoken = ? WHERE (email = ? OR Phone = ?)', [pushtoken, email, email])
 
             const { Password, ...memberData } = member;
             return resolve({ status: '200', message: 'Login successful', member: memberData });
